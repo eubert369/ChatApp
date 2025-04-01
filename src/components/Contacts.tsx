@@ -12,8 +12,8 @@ export default function Contacts({
     <button
       type="button"
       className={`${
-        selected ? "bg-[#27548A]/35" : "hover:bg-white/15"
-      } w-full h-fit px-5 py-2 flex gap-2 rounded-md`}
+        selected ? "bg-[#27548A]/25" : "hover:bg-white/15"
+      } w-full h-fit px-2 py-2 flex gap-2 rounded-md`}
     >
       <Image
         className="rounded-full"

@@ -1,11 +1,37 @@
 import React from "react";
 import { EllipsisVertical, Search } from "lucide-react";
 import Contacts from "./Contacts";
+import { contactTypes } from "./Types";
+
+const listOfContactTypes: contactTypes[] = [
+  {
+    imgSrc: "/img/profile-pic1.png",
+    name: "Monkey D. Luffy",
+    lastMessage: "Luffy: Hey",
+    selected: true
+  },
+  {
+    imgSrc: "/img/profile-pic2.png",
+    name: "Roronoa Zoro",
+    lastMessage: "Zoro: Hey",
+  },
+  {
+    imgSrc: "/img/profile-pic4.png",
+    name: "Vinsmoke Sanji",
+    lastMessage: "Nami: Hey",
+  },
+
+  {
+    imgSrc: "/img/profile-pic3.png",
+    name: "Catburglar Nami",
+    lastMessage: "Sanji: Hey",
+  },
+];
 
 export default function Sidebar() {
   return (
     <div className="bg-[#183B4E] w-fit max-w-[420px] h-full rounded-2xl flex flex-col">
-      <div className="w-full h-fit px-6 py-5 flex flex-col gap-4">
+      <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
         <div className="w-full h-fit flex justify-between items-center">
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
           <button className="w-fit h-fit">
@@ -24,28 +50,16 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="px-2 w-full h-full flex flex-col overflow-y-hidden">
-        <Contacts
-          imgSrc="/img/profile-pic1.png"
-          name="Lorem Ipsum"
-          lastMessage="Lorem: Hey"
-          selected
-        />
-        <Contacts
-          imgSrc="/img/profile-pic2.png"
-          name="Lorem Ipsum"
-          lastMessage="Lorem: Hey"
-        />
-        <Contacts
-          imgSrc="/img/profile-pic3.png"
-          name="Lorem Ipsum"
-          lastMessage="Lorem: Hey"
-        />
-        <Contacts
-          imgSrc="/img/profile-pic4.png"
-          name="Lorem Ipsum"
-          lastMessage="Lorem: Hey"
-        />
+      <div className="px-2 w-full h-full flex flex-col overflow-y-auto">
+        {listOfContactTypes.map((contact, id) => (
+          <Contacts
+            key={id}
+            imgSrc={contact.imgSrc}
+            name={contact.name}
+            lastMessage={contact.lastMessage}
+            selected={contact.selected}
+          />
+        ))}
       </div>
     </div>
   );
