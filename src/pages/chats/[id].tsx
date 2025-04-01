@@ -50,7 +50,7 @@ export default function ChatMate() {
         {rawChats.map((chat, chatId) => (
           <ChatItem
             key={chatId}
-            message={chat.message}
+            message={`${chat.message} ${id}`}
             received={chat.received}
             profilePicUrl={chat.profilePicUrl}
           />
