@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
       <div className="bg-[#F5EEDC] w-full h-screen p-3 flex gap-6">
         <Sidebar />
-        <main>
+        <main className="w-full h-full flex flex-col gap-2">
           <Navbar />
           {children}
         </main>

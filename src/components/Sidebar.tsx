@@ -30,7 +30,7 @@ const listOfContactTypes: contactTypes[] = [
 
 export default function Sidebar() {
   return (
-    <div className="bg-[#183B4E] w-fit max-w-[420px] h-full rounded-2xl flex flex-col">
+    <div className="bg-[#183B4E] w-fit min-w-[350px] max-w-[420px] h-full rounded-2xl flex flex-col">
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
         <div className="w-full h-fit flex justify-between items-center">
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
@@ -54,6 +54,7 @@ export default function Sidebar() {
         {listOfContactTypes.map((contact, id) => (
           <Contacts
             key={id}
+            contactId={id}
             imgSrc={contact.imgSrc}
             name={contact.name}
             lastMessage={contact.lastMessage}

@@ -1,16 +1,18 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { contactTypes } from "./Types";
 
 export default function Contacts({
+  contactId,
   imgSrc,
   name,
   lastMessage,
   selected,
 }: contactTypes) {
   return (
-    <button
-      type="button"
+    <Link
+      href={`/chats/${contactId}`}
       className={`${
         selected ? "bg-[#27548A]/25" : "hover:bg-white/15"
       } w-full h-fit px-2 py-2 flex gap-2 rounded-md`}
@@ -29,6 +31,6 @@ export default function Contacts({
           {lastMessage} . 32m
         </p>
       </div>
-    </button>
+    </Link>
   );
 }

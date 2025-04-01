@@ -1,6 +1,13 @@
 export interface contactTypes {
+  contactId?: number;
   imgSrc: string;
   name: string;
   lastMessage: string;
-  selected?: boolean
+  selected?: boolean;
+}
+
+export interface chatItemTypes {
+  message: string;
+  received?: boolean;
+  profilePicUrl: string;
 }
