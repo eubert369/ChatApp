@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="bg-[#F5EEDC] w-full h-screen p-3 flex gap-6">
         <Sidebar />
         <main className="w-full h-full flex flex-col gap-2">
-          <Navbar />
+          <Navbar withSelectedConvo={router.pathname !== '/chats'} />
           {children}
         </main>
       </div>
