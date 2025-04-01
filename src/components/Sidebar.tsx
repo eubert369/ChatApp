@@ -1,14 +1,15 @@
 import React from "react";
-import { EllipsisVertical, Search } from "lucide-react";
+import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
 import Contacts from "./Contacts";
 import { contactTypes } from "./Types";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const listOfContactTypes: contactTypes[] = [
   {
     imgSrc: "/img/profile-pic1.png",
     name: "Monkey D. Luffy",
     lastMessage: "Luffy: Hey",
-    selected: true
+    selected: true,
   },
   {
     imgSrc: "/img/profile-pic2.png",
@@ -34,9 +35,21 @@ export default function Sidebar() {
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
         <div className="w-full h-fit flex justify-between items-center">
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
-          <button className="w-fit h-fit">
-            <EllipsisVertical className="w-6 h-6 text-white" />
-          </button>
+          <Popover>
+            <PopoverTrigger className="cursor-pointer">
+              <EllipsisVertical className="w-6 h-6 text-white" />
+            </PopoverTrigger>
+            <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E]">
+              <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
+                <UserRound className="w-4 h-4" />
+                Profile Settings
+              </button>
+              <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div className="bg-[#F5EEDC] w-full h-fit px-3 py-2 flex items-center gap-2 rounded-[8px]">
