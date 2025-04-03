@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Signup() {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setpassword] = useState<string>("");
+
   return (
     <div className="bg-[#183B4E] w-full h-screen flex justify-center items-center">
       <div className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-5">
@@ -21,6 +27,8 @@ export default function Signup() {
             <input
               type="text"
               id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
@@ -35,6 +43,8 @@ export default function Signup() {
             <input
               type="text"
               id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
@@ -49,6 +59,8 @@ export default function Signup() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
@@ -63,6 +75,8 @@ export default function Signup() {
             <input
               type="text"
               id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
@@ -77,6 +91,8 @@ export default function Signup() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
               className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function Login() {
   const router = useRouter();
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   return (
-    <div className="bg-[#183B4E] w-full h-screen flex justify-center items-center">
+    <div className="bg-[#183B4E] w-full h-screen overflow-y-auto flex justify-center items-center">
       <div className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8">
         <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
           Login
@@ -24,6 +26,8 @@ export default function Login() {
             <input
               type="text"
               id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
             />
           </div>
@@ -38,6 +42,8 @@ export default function Login() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
             />
           </div>
