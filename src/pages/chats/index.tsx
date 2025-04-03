@@ -6,7 +6,7 @@ export default function Chats() {
     <div className="w-full h-full flex items-center justify-center flex-col gap-3">
       <div className="relative w-2/3 h-2/3">
         <Image
-          src={"/img/select-message.svg"}
+          src={"/img/group-people-chatting.png"}
           alt="Icon"
           fill
           priority

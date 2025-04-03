@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, UserMinus } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -44,7 +44,8 @@ export default function Navbar({
         </PopoverTrigger>
         <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E] rounded-md">
           <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
-            Profile Settings
+            <UserMinus className="w-4 h-4" />
+            Remove Contact
           </button>
         </PopoverContent>
       </Popover>
