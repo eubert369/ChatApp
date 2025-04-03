@@ -24,7 +24,7 @@ export default function Login() {
             <input
               type="text"
               id="username"
-              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E]"
+              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
             />
           </div>
 
@@ -38,7 +38,7 @@ export default function Login() {
             <input
               type="password"
               id="password"
-              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E]"
+              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
             />
           </div>
         </div>

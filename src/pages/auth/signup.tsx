@@ -21,7 +21,7 @@ export default function Signup() {
             <input
               type="text"
               id="firstName"
-              className="border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E] focus:outline-none"
+              className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
 
@@ -35,7 +35,7 @@ export default function Signup() {
             <input
               type="text"
               id="lastName"
-              className="border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E] focus:outline-none"
+              className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
 
@@ -49,7 +49,7 @@ export default function Signup() {
             <input
               type="email"
               id="email"
-              className="border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E] focus:outline-none"
+              className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
 
@@ -63,7 +63,7 @@ export default function Signup() {
             <input
               type="text"
               id="username"
-              className="border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E] focus:outline-none"
+              className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
 
@@ -77,7 +77,7 @@ export default function Signup() {
             <input
               type="password"
               id="password"
-              className="border border-[#183B4E] rounded-[8px] px-2 py-1 text-base text-[#183B4E] focus:outline-none"
+              className="border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E] focus:outline-none"
             />
           </div>
         </div>
