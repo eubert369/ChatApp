@@ -46,7 +46,7 @@ export default function Login() {
         <div className="w-full h-fit flex flex-col gap-3">
           <button
             type="submit"
-            onClick={() => router.push('/chats')}
+            onClick={() => router.push("/chats")}
             className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer"
           >
             Login
