@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,9 +9,35 @@ export default function Signup() {
   const [username, setUsername] = useState<string>("");
   const [password, setpassword] = useState<string>("");
 
+  const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const req = await fetch("/api/signup", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          username: username,
+          password: password,
+        }),
+      });
+      const res = await req.json();
+      console.log("response", res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-[#183B4E] w-full h-screen flex justify-center items-center">
-      <div className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-5">
+      <form
+        onSubmit={formSubmit}
+        className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-5"
+      >
         <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
           Signup
         </h3>
@@ -123,7 +149,7 @@ export default function Signup() {
             </Link>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

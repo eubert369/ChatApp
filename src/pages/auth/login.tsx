@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,9 +8,29 @@ export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const req = await fetch("/api/login", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+      const res = await req.json();
+      console.log("response", res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-[#183B4E] w-full h-screen overflow-y-auto flex justify-center items-center">
-      <div className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8">
+      <form onSubmit={formSubmit} className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8">
         <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
           Login
         </h3>
@@ -75,7 +95,7 @@ export default function Login() {
             </Link>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
