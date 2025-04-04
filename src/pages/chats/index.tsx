@@ -1,6 +1,20 @@
 import React from "react";
 import Image from "next/image";
 
+// export async function getServerSideProps() {
+//   try {
+//     const req = await fetch("/api/validator", {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       method: "POST",
+//       body: JSON.stringify({ token: decodeURIComponent(token.value) }),
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
 export default function Chats() {
   return (
     <div className="w-full h-full flex items-center justify-center flex-col gap-3">
@@ -8,11 +22,14 @@ export default function Chats() {
         <Image
           src={"/img/group-people-chatting.png"}
           alt="Icon"
+          sizes="100"
           fill
           priority
         />
       </div>
-      <h3 className="font-sans text-2xl text-[#183B4E]">No Selected Conversation</h3>
+      <h3 className="font-sans text-2xl text-[#183B4E]">
+        No Selected Conversation
+      </h3>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Signup() {
+  const router = useRouter();
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -25,8 +27,10 @@ export default function Signup() {
           password: password,
         }),
       });
-      const res = await req.json();
-      console.log("response", res);
+
+      if (req.status === 200) {
+        router.push("/auth/login");
+      }
     } catch (error) {
       console.error(error);
     }

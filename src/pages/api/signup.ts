@@ -7,17 +7,20 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+    const { firstName, lastName, email, username, password } = req.body;
+
     if (req.method == "POST") {
       const docRef = await addDoc(collection(db, "users"), {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        username: username,
+        password: password,
       });
+
       res
-        .status(200)
-        .json({ userID: docRef.id, message: "user successfully created" });
+        .status(docRef ? 200 : 401)
+        .json({ userID: docRef.id, message: docRef ? "user successfully created" : 'error in creating user' });
     } else {
     }
   } catch (error) {

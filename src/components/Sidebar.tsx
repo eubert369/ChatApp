@@ -3,6 +3,7 @@ import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
 import Contacts from "./Contacts";
 import { contactTypes } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useRouter } from "next/router";
 
 const listOfContactTypes: contactTypes[] = [
   {
@@ -30,6 +31,25 @@ const listOfContactTypes: contactTypes[] = [
 ];
 
 export default function Sidebar() {
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      const request = await fetch("/api/logout", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      if (request.status === 200) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-[#183B4E] w-fit min-w-[350px] max-w-[420px] h-full rounded-2xl flex flex-col">
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
@@ -44,7 +64,10 @@ export default function Sidebar() {
                 <UserRound className="w-4 h-4" />
                 Profile Settings
               </button>
-              <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
+              <button
+                onClick={logout}
+                className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15"
+              >
                 <LogOut className="w-4 h-4" />
                 Logout
               </button>

@@ -5,12 +5,15 @@ import { useRouter } from "next/router";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [invalidCredentials, setInvalidCredentials] = useState<boolean>(false);
 
   const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      setInvalidCredentials(false);
+
       const req = await fetch("/api/login", {
         headers: {
           "Content-Type": "application/json",
@@ -21,8 +24,15 @@ export default function Login() {
           password: password,
         }),
       });
-      const res = await req.json();
-      console.log("response", res);
+
+      if (req.status === 200) {
+        const res = await req.json();
+        console.log("success", res, router.pathname);
+
+        router.push("/chats");
+      } else {
+        setInvalidCredentials(true);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -30,7 +40,10 @@ export default function Login() {
 
   return (
     <div className="bg-[#183B4E] w-full h-screen overflow-y-auto flex justify-center items-center">
-      <form onSubmit={formSubmit} className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8">
+      <form
+        onSubmit={formSubmit}
+        className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8"
+      >
         <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
           Login
         </h3>
@@ -70,9 +83,13 @@ export default function Login() {
         </div>
 
         <div className="w-full h-fit flex flex-col gap-3">
+          {invalidCredentials && (
+            <p className="text-base text-red-500 text-center">
+              Incorrect Username or Password
+            </p>
+          )}
           <button
             type="submit"
-            onClick={() => router.push("/chats")}
             className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer"
           >
             Login
