@@ -2,17 +2,20 @@ import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import LoadingComponent from "@/components/LoadingComponent";
 
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [invalidCredentials, setInvalidCredentials] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       setInvalidCredentials(false);
+      setLoading(true);
 
       const req = await fetch("/api/login", {
         headers: {
@@ -32,6 +35,7 @@ export default function Login() {
         router.push("/chats");
       } else {
         setInvalidCredentials(true);
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -113,6 +117,7 @@ export default function Login() {
           </p>
         </div>
       </form>
+      {loading && <LoadingComponent />}
     </div>
   );
 }
