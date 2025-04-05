@@ -16,11 +16,17 @@ export default async function handler(
         email: email,
         username: username,
         password: password,
+        imgURL: "",
       });
 
       res
         .status(docRef ? 200 : 401)
-        .json({ userID: docRef.id, message: docRef ? "user successfully created" : 'error in creating user' });
+        .json({
+          userID: docRef.id,
+          message: docRef
+            ? "user successfully created"
+            : "error in creating user",
+        });
     } else {
     }
   } catch (error) {
