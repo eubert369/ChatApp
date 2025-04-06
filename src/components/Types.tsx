@@ -22,6 +22,6 @@ export interface userTypes {
 }
 
 export interface contextTypes {
-  user?: userTypes;
+  user: userTypes;
   setUser: (value: userTypes) => void;
 }

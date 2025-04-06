@@ -10,7 +10,7 @@ const emptyUserProps: userTypes = {
   imgUrl: "",
 };
 
-const Context = createContext<contextTypes | undefined>(undefined);
+export const Context = createContext<contextTypes | undefined>(undefined);
 
 export default function ContextProvider({
   children,

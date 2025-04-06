@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Image from "next/image";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Context } from "@/components/ContextProvider";
 import { userTypes } from "@/components/Types";
 
 interface ssrProps {
-  user: userTypes;
+  currentUser: userTypes;
 }
 
 const emptyUserProps: userTypes = {
@@ -30,13 +31,13 @@ export const getServerSideProps = (async ({ req }) => {
 
       return {
         props: {
-          user: response,
+          currentUser: response,
         },
       };
     } else {
       return {
         props: {
-          user: emptyUserProps,
+          currentUser: emptyUserProps,
         },
       };
     }
@@ -44,16 +45,25 @@ export const getServerSideProps = (async ({ req }) => {
     console.error(error);
     return {
       props: {
-        user: emptyUserProps,
+        currentUser: emptyUserProps,
       },
     };
   }
 }) satisfies GetServerSideProps<ssrProps>;
 
 export default function Chats({
-  user,
+  currentUser,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log("SSR test", user);
+  const context = useContext(Context);
+
+  if (!context) {
+    throw new Error("ChildComponent must be used within a ContextProvider");
+  }
+
+  useEffect(() => {
+    context.setUser(currentUser);
+    console.log("useContext()", context.user);
+  }, [context, currentUser]);
 
   return (
     <div className="w-full h-full flex items-center justify-center flex-col gap-3">
