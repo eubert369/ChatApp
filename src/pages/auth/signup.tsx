@@ -55,6 +55,7 @@ export default function Signup() {
               First Name
             </label>
             <input
+              required
               type="text"
               id="firstName"
               value={firstName}
@@ -71,6 +72,7 @@ export default function Signup() {
               Last Name
             </label>
             <input
+              required
               type="text"
               id="lastName"
               value={lastName}
@@ -87,6 +89,7 @@ export default function Signup() {
               Email
             </label>
             <input
+              required
               type="email"
               id="email"
               value={email}
@@ -103,6 +106,7 @@ export default function Signup() {
               Username
             </label>
             <input
+              required
               type="text"
               id="username"
               value={username}
@@ -119,6 +123,7 @@ export default function Signup() {
               Password
             </label>
             <input
+              required
               type="password"
               id="password"
               value={password}

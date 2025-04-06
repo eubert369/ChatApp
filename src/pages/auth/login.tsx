@@ -61,6 +61,7 @@ export default function Login() {
               Username
             </label>
             <input
+              required
               type="text"
               id="username"
               value={username}
@@ -77,6 +78,7 @@ export default function Login() {
               Password
             </label>
             <input
+              required
               type="password"
               id="password"
               value={password}

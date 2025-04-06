@@ -2,64 +2,51 @@ import React from "react";
 import Image from "next/image";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-// export const getServerSideProps = async ({ req, res }) => {
-//   try {    
-//     const token = req.headers.cookie;
-//     const decodedToken = JSON.parse(decodeURIComponent(token.split('=')[1]));
-    
-//     const request = await fetch(`/api/users/user`);
-//     const response = await request.json();
-//     console.log('request', response);
-    
-
-//     return {
-//       props: {
-//         test: decodedToken.id,
-//       },
-//     };
-//   } catch (error) {
-//     return {
-//       props: {
-//         test: 'error',
-//       },
-//     };
-//   }
-// };
-
 interface ssrProps {
-  sample: string
+  sample: string;
 }
 
-export const getServerSideProps = (async ({req}) => {
+export const getServerSideProps = (async ({ req }) => {
   try {
     const token = req.headers.cookie;
-    const decodedToken = JSON.parse(decodeURIComponent(token.split('=')[1]));
-    const protocol = req.headers['x-forwarded-proto'];
-    const origin: string = `${protocol}://${req.headers.host}`
-    const request = await fetch(`${origin}/api/users/${decodedToken.id}`);
-    const response = await request.json();
-    console.log('response', response);
-    
+    if (token) {
+      const decodedToken = JSON.parse(decodeURIComponent(token.split("=")[1]));
+      const protocol = req.headers["x-forwarded-proto"];
+      const origin: string = `${protocol}://${req.headers.host}`;
+      const request = await fetch(`${origin}/api/users/${decodedToken.id}`);
+      const response = await request.json();
+      console.log("response", response);
 
-    return {
-      props: {
-        test: {
-          sample: decodedToken.id
-        } 
-      }
+      return {
+        props: {
+          test: {
+            sample: decodedToken.id,
+          },
+        },
+      };
+    } else {
+      return {
+        props: {
+          test: {
+            sample: 'no token',
+          },
+        },
+      };
     }
   } catch (error) {
     return {
       props: {
         test: {
-          sample: `${error}`
-        } 
-      }
-    }
+          sample: `${error}`,
+        },
+      },
+    };
   }
-}) satisfies GetServerSideProps<{test: ssrProps}>
+}) satisfies GetServerSideProps<{ test: ssrProps }>;
 
-export default function Chats({ test }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Chats({
+  test,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("SSR test", test);
 
   return (
