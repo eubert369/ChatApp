@@ -11,3 +11,12 @@ export interface chatItemTypes {
   received?: boolean;
   profilePicUrl: string;
 }
+
+export interface userTypes {
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+  imgUrl: "";
+}

@@ -2,9 +2,12 @@ import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import LoadingComponent from "@/components/LoadingComponent";
 
 export default function Signup() {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -14,6 +17,7 @@ export default function Signup() {
   const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      setLoading(true);
       const req = await fetch("/api/signup", {
         headers: {
           "Content-Type": "application/json",
@@ -27,9 +31,14 @@ export default function Signup() {
           password: password,
         }),
       });
+      const res = await req.json();
 
       if (req.status === 200) {
         router.push("/auth/login");
+        setLoading(false);
+      } else {
+        setErrorMessage(res.message);
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -134,6 +143,7 @@ export default function Signup() {
         </div>
 
         <div className="w-full h-fit flex flex-col gap-3">
+          <p className="text-base text-red-500 text-center">{errorMessage}</p>
           <button
             type="submit"
             className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer"
@@ -159,6 +169,7 @@ export default function Signup() {
           </p>
         </div>
       </form>
+      {loading && <LoadingComponent />}
     </div>
   );
 }

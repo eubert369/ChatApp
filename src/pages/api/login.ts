@@ -1,14 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/components/firebase/Config";
 import { collection, getDocs } from "firebase/firestore";
-
-interface userTypes {
-  firstName: string;
-  lastName: string;
-  email: string;
-  username: string;
-  password: string;
-}
+import { userTypes } from "@/components/Types";
 
 export default async function handler(
   req: NextApiRequest,

@@ -29,8 +29,8 @@ export default function Login() {
       });
 
       if (req.status === 200) {
-        const res = await req.json();
-        console.log("success", res, router.pathname);
+        // const res = await req.json();
+        // console.log("success", res, router.pathname);
 
         router.push("/chats");
       } else {
