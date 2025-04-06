@@ -18,8 +18,11 @@ export default function ContextProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<userTypes>(emptyUserProps);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   return (
-    <Context.Provider value={{ user, setUser }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, setUser, loggedIn, setLoggedIn }}>
+      {children}
+    </Context.Provider>
   );
 }

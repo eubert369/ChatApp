@@ -1,59 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import Image from "next/image";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Context } from "@/components/ContextProvider";
-import { userTypes } from "@/components/Types";
 
-interface ssrProps {
-  currentUser: userTypes;
-}
-
-const emptyUserProps: userTypes = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  username: "",
-  password: "",
-  imgUrl: "",
-};
-
-export const getServerSideProps = (async ({ req }) => {
-  try {
-    const token = req.headers.cookie;
-    if (token) {
-      const decodedToken = JSON.parse(decodeURIComponent(token.split("=")[1]));
-      const protocol = req.headers["x-forwarded-proto"];
-      const origin: string = `${protocol}://${req.headers.host}`;
-
-      const request = await fetch(`${origin}/api/users/${decodedToken.id}`);
-      const response = await request.json();
-      console.log("response", response);
-
-      return {
-        props: {
-          currentUser: response,
-        },
-      };
-    } else {
-      return {
-        props: {
-          currentUser: emptyUserProps,
-        },
-      };
-    }
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {
-        currentUser: emptyUserProps,
-      },
-    };
-  }
-}) satisfies GetServerSideProps<ssrProps>;
-
-export default function Chats({
-  currentUser,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Chats() {
   const context = useContext(Context);
 
   if (!context) {
@@ -61,9 +10,8 @@ export default function Chats({
   }
 
   useEffect(() => {
-    context.setUser(currentUser);
-    console.log("useContext()", context.user);
-  }, [context, currentUser]);
+    console.log("context", context);
+  }, [context]);
 
   return (
     <div className="w-full h-full flex items-center justify-center flex-col gap-3">

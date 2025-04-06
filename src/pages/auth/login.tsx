@@ -1,10 +1,13 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LoadingComponent from "@/components/LoadingComponent";
+import { Context } from "@/components/ContextProvider";
 
 export default function Login() {
+  const context = useContext(Context);
+
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -29,8 +32,10 @@ export default function Login() {
       });
 
       if (req.status === 200) {
-        // const res = await req.json();
-        // console.log("success", res, router.pathname);
+        const res = await req.json();
+        context?.setUser(res.user);
+        context?.setLoggedIn(true);
+        console.log("success", res, router.pathname);
 
         router.push("/chats");
       } else {
@@ -105,6 +110,7 @@ export default function Login() {
               <Image
                 src={"/icons/google-icon.svg"}
                 alt="google icon"
+                priority
                 width={16}
                 height={16}
               />

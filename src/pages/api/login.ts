@@ -36,6 +36,7 @@ export default async function handler(
 
       res.status(!!isLoggedIn ? 200 : 401).json({
         message: !!isLoggedIn ? "Login Successful" : "Invalid Credentials",
+        user: isLoggedIn ?? '401',
       });
     }
   } catch (error) {
