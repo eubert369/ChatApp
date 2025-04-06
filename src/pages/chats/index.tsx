@@ -1,10 +1,20 @@
 import React from "react";
 import Image from "next/image";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { userTypes } from "@/components/Types";
 
 interface ssrProps {
-  sample: string;
+  user: userTypes;
 }
+
+const emptyUserProps: userTypes = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  username: "",
+  password: "",
+  imgUrl: "",
+};
 
 export const getServerSideProps = (async ({ req }) => {
   try {
@@ -13,41 +23,37 @@ export const getServerSideProps = (async ({ req }) => {
       const decodedToken = JSON.parse(decodeURIComponent(token.split("=")[1]));
       const protocol = req.headers["x-forwarded-proto"];
       const origin: string = `${protocol}://${req.headers.host}`;
+
       const request = await fetch(`${origin}/api/users/${decodedToken.id}`);
       const response = await request.json();
       console.log("response", response);
 
       return {
         props: {
-          test: {
-            sample: decodedToken.id,
-          },
+          user: response,
         },
       };
     } else {
       return {
         props: {
-          test: {
-            sample: 'no token',
-          },
+          user: emptyUserProps,
         },
       };
     }
   } catch (error) {
+    console.error(error);
     return {
       props: {
-        test: {
-          sample: `${error}`,
-        },
+        user: emptyUserProps,
       },
     };
   }
-}) satisfies GetServerSideProps<{ test: ssrProps }>;
+}) satisfies GetServerSideProps<ssrProps>;
 
 export default function Chats({
-  test,
+  user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log("SSR test", test);
+  console.log("SSR test", user);
 
   return (
     <div className="w-full h-full flex items-center justify-center flex-col gap-3">

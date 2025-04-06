@@ -18,5 +18,5 @@ export interface userTypes {
   email: string;
   username: string;
   password: string;
-  imgUrl: "";
+  imgUrl: string;
 }
