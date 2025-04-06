@@ -20,3 +20,8 @@ export interface userTypes {
   password: string;
   imgUrl: string;
 }
+
+export interface contextTypes {
+  user?: userTypes;
+  setUser: (value: userTypes) => void;
+}
