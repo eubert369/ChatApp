@@ -19,9 +19,19 @@ export default function ContextProvider({
 }) {
   const [user, setUser] = useState<userTypes>(emptyUserProps);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   return (
-    <Context.Provider value={{ user, setUser, loggedIn, setLoggedIn }}>
+    <Context.Provider
+      value={{
+        user,
+        setUser,
+        loggedIn,
+        setLoggedIn,
+        initialized,
+        setInitialized,
+      }}
+    >
       {children}
     </Context.Provider>
   );

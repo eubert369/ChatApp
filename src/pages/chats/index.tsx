@@ -1,6 +1,59 @@
 import React, { useContext, useEffect } from "react";
 import Image from "next/image";
+// import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+// import { userTypes } from "@/components/Types";
 import { Context } from "@/components/ContextProvider";
+
+// interface ssrProps {
+//   currentUser: userTypes;
+// }
+
+// const emptyUserProps: userTypes = {
+//   firstName: "",
+//   lastName: "",
+//   email: "",
+//   username: "",
+//   password: "",
+//   imgUrl: "",
+// };
+
+// export const getServerSideProps = (async ({ req }) => {
+//   try {
+//     const token = req.headers.cookie;
+//     if (token) {
+//       const decodedToken = JSON.parse(decodeURIComponent(token.split("=")[1]));
+//       const protocol = req.headers["x-forwarded-proto"];
+//       const origin: string = `${protocol}://${req.headers.host}`;
+
+//       const request = await fetch(`${origin}/api/users/${decodedToken.id}`);
+//       const response = await request.json();
+//       console.log("response", response);
+
+//       return {
+//         props: {
+//           currentUser: response,
+//         },
+//       };
+//     } else {
+//       return {
+//         props: {
+//           currentUser: emptyUserProps,
+//         },
+//       };
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return {
+//       props: {
+//         currentUser: emptyUserProps,
+//       },
+//     };
+//   }
+// }) satisfies GetServerSideProps<ssrProps>;
+
+// {
+//   currentUser,
+// }: InferGetServerSidePropsType<typeof getServerSideProps>
 
 export default function Chats() {
   const context = useContext(Context);
@@ -9,8 +62,10 @@ export default function Chats() {
     throw new Error("ChildComponent must be used within a ContextProvider");
   }
 
+  
+
   useEffect(() => {
-    console.log("context", context);
+    console.log("context", !context.initialized);
   }, [context]);
 
   return (

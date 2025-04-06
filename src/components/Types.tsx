@@ -26,4 +26,6 @@ export interface contextTypes {
   setUser: (value: userTypes) => void;
   loggedIn: boolean;
   setLoggedIn: (value: boolean) => void;
+  initialized: boolean;
+  setInitialized: (value: boolean) => void;
 }
