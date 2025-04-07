@@ -1,7 +1,7 @@
 import React, { FormEvent, useContext, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import GoogleAuthBtn from "@/components/GoogleAuthBtn";
 import LoadingComponent from "@/components/LoadingComponent";
 import { Context } from "@/components/ContextProvider";
 
@@ -101,22 +101,12 @@ export default function Login() {
           )}
           <button
             type="submit"
-            className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer"
+            className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:scale-105 cursor-pointer"
           >
             Login
           </button>
-          <button className="w-full h-fit py-2 rounded-[8px] border border-[#27548A] font-sans font-bold text-base text-[#27548A] bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer flex items-center justify-center gap-2">
-            <i>
-              <Image
-                src={"/icons/google-icon.svg"}
-                alt="google icon"
-                priority
-                width={16}
-                height={16}
-              />
-            </i>
-            Continue with Google
-          </button>
+          <GoogleAuthBtn />
+
           <p className="font-sans font-normal text-xs text-[#183B4E] text-center">
             Don&apos;t have an Account?{" "}
             <Link href={"/auth/signup"} className="hover:font-bold">
