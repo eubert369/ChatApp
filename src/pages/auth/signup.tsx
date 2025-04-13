@@ -150,18 +150,7 @@ export default function Signup() {
           >
             Create Account
           </button>
-          <GoogleAuthBtn />
-          {/* <button className="w-full h-fit py-2 rounded-[8px] border border-[#27548A] font-sans font-bold text-base text-[#27548A] bg-[#F5EEDC] hover:text-[#27548A] cursor-pointer flex items-center justify-center gap-2">
-            <i>
-              <Image
-                src={"/icons/google-icon.svg"}
-                alt="google icon"
-                width={16}
-                height={16}
-              />
-            </i>
-            Continue with Google
-          </button> */}
+          <GoogleAuthBtn setLoading={setLoading} />
           <p className="font-sans font-normal text-xs text-[#27548A] text-center">
             Already have an Account?{" "}
             <Link href={"/auth/login"} className="hover:font-bold">

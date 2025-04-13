@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
 import { auth } from "./firebase/Config";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useRouter } from "next/router";
+import { Context } from "./ContextProvider";
 
 const provider = new GoogleAuthProvider();
 
-export default function GoogleAuthBtn() {
+export default function GoogleAuthBtn({
+  setLoading,
+}: {
+  setLoading: (value: boolean) => void;
+}) {
+  const router = useRouter();
+  const context = useContext(Context);
+
   const clickEvent = async () => {
     try {
       const googleSignIn = await signInWithPopup(auth, provider);
-      // const credential = await GoogleAuthProvider.credentialFromResult(
-      //   googleSignIn
-      // );
       const user = googleSignIn.user;
 
       if (user) {
+        setLoading(true);
         const displayName: string[] | undefined = user.displayName?.split(" ");
 
         const firstName: string = displayName
@@ -38,8 +45,13 @@ export default function GoogleAuthBtn() {
           }),
         });
 
-        const res = await req.json();
-        console.log("oauth response", res);
+        if (req.status === 200) {
+          const res = await req.json();
+          setLoading(false);
+          context?.setUser(res.user);
+          context?.setLoggedIn(true);
+          router.push("/chats");
+        }
       }
     } catch (error) {
       console.error(error);

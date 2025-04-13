@@ -105,7 +105,7 @@ export default function Login() {
           >
             Login
           </button>
-          <GoogleAuthBtn />
+          <GoogleAuthBtn setLoading={setLoading} />
 
           <p className="font-sans font-normal text-xs text-[#183B4E] text-center">
             Don&apos;t have an Account?{" "}

@@ -34,7 +34,9 @@ export default async function handler(
               JSON.stringify(tokenToBeEncoded)
             )}; Path=/; HttpOnly; Max-Age=3600; Secure; SameSite=Strict`
           );
-          res.status(200).json({ message: user });
+          res
+            .status(200)
+            .json({ message: "OAuth Signin Sucessfull", user: user });
         }
       } else {
         const docRef = await addDoc(collection(db, "users"), {
@@ -58,7 +60,18 @@ export default async function handler(
           )}; Path=/; HttpOnly; Max-Age=3600; Secure; SameSite=Strict`
         );
 
-        res.status(200).json({ message: "User created successfully" });
+        res.status(200).json({
+          message: "OAuth Signin Sucessfull",
+          user: {
+            type: "oauth/google",
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            username: "",
+            password: "",
+            imgURL: imgURL,
+          },
+        });
       }
     }
   } catch (error) {
