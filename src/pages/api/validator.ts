@@ -13,17 +13,28 @@ export default async function handler(
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        res
-          .status(docSnap.data().username === decodedToken.user ? 200 : 201)
-          .json({
-            message:
-              docSnap.data().username === decodedToken.user
-                ? "Authenticated"
-                : "Invalid Credentials",
-          });
+        if (docSnap.data().type == "username/password") {
+          res
+            .status(docSnap.data().username === decodedToken.user ? 200 : 201)
+            .json({
+              message:
+                docSnap.data().username === decodedToken.user
+                  ? "Authenticated"
+                  : "Invalid Credentials",
+            });
+        } else {
+          res
+            .status(docSnap.data().email === decodedToken.user ? 200 : 201)
+            .json({
+              message:
+                docSnap.data().email === decodedToken.user
+                  ? "Authenticated"
+                  : "Invalid Credentials",
+            });
+        }
       }
     }
   } catch (error) {
-    res.json({ message: error });
+    res.status(300).json({ message: error });
   }
 }

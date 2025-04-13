@@ -18,5 +18,15 @@ export interface userTypes {
   email: string;
   username: string;
   password: string;
-  imgUrl: "";
+  imgUrl: string;
+  type: string;
+}
+
+export interface contextTypes {
+  user: userTypes;
+  setUser: (value: userTypes) => void;
+  loggedIn: boolean;
+  setLoggedIn: (value: boolean) => void;
+  initialized: boolean;
+  setInitialized: (value: boolean) => void;
 }

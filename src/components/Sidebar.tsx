@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
 import Contacts from "./Contacts";
 import { contactTypes } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useRouter } from "next/router";
+import { Context } from "./ContextProvider";
 
 const listOfContactTypes: contactTypes[] = [
   {
@@ -32,6 +33,7 @@ const listOfContactTypes: contactTypes[] = [
 
 export default function Sidebar() {
   const router = useRouter();
+  const context = useContext(Context);
 
   const logout = async () => {
     try {
@@ -43,6 +45,7 @@ export default function Sidebar() {
       });
 
       if (request.status === 200) {
+        context?.setLoggedIn(false);
         router.push("/");
       }
     } catch (error) {
