@@ -31,6 +31,7 @@ export default async function handler(
 
       if (!emailExists && !usernameExists) {
         docRef = await addDoc(collection(db, "users"), {
+          type: 'username/password',
           firstName: firstName,
           lastName: lastName,
           email: email,

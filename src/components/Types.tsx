@@ -19,6 +19,7 @@ export interface userTypes {
   username: string;
   password: string;
   imgUrl: string;
+  type: string;
 }
 
 export interface contextTypes {

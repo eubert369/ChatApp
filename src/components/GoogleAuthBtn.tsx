@@ -9,16 +9,40 @@ export default function GoogleAuthBtn() {
   const clickEvent = async () => {
     try {
       const googleSignIn = await signInWithPopup(auth, provider);
-      const credential = await GoogleAuthProvider.credentialFromResult(
-        googleSignIn
-      );
-      const token = await credential?.accessToken;
-      const user = await googleSignIn.user;
+      // const credential = await GoogleAuthProvider.credentialFromResult(
+      //   googleSignIn
+      // );
+      const user = googleSignIn.user;
 
-      console.log("token", token);
-      console.log("user", user);
+      if (user) {
+        const displayName: string[] | undefined = user.displayName?.split(" ");
+
+        const firstName: string = displayName
+          ? displayName.slice(0, -1).join(" ")
+          : "";
+
+        const lastName: string = displayName
+          ? displayName[displayName.length - 1]
+          : "";
+
+        const req = await fetch("/api/oauth", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: user.email,
+            imgURL: user.photoURL,
+          }),
+        });
+
+        const res = await req.json();
+        console.log("oauth response", res);
+      }
     } catch (error) {
-      console.error(error);          
+      console.error(error);
     }
   };
   return (
