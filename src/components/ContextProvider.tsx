@@ -7,6 +7,7 @@ const emptyUserProps: userTypes = {
   email: "",
   username: "",
   password: "",
+  type: "",
   imgUrl: "",
 };
 
