@@ -41,6 +41,8 @@ export default function Chats() {
     if (!context.initialized) {
       validateUser();
     }
+    console.log("User:", context.user.imgUrl);
+    
   }, [context, router]);
 
   return (

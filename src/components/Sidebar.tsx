@@ -46,6 +46,16 @@ export default function Sidebar() {
 
       if (request.status === 200) {
         context?.setLoggedIn(false);
+        context?.setUser({
+          firstName: "",
+          lastName: "",
+          email: "",
+          username: "",
+          password: "",
+          type: "",
+          imgUrl: "",
+        });
+        context?.setInitialized(false);
         router.push("/");
       }
     } catch (error) {
