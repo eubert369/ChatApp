@@ -37,7 +37,7 @@ export default async function handler(
           email: email,
           username: username,
           password: password,
-          imgURL: "",
+          imgUrl: "",
         });
 
         status = 200;

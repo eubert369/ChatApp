@@ -3,6 +3,14 @@ import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
 import Contacts from "./Contacts";
 import { contactTypes } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
 
@@ -73,10 +81,26 @@ export default function Sidebar() {
               <EllipsisVertical className="w-6 h-6 text-white" />
             </PopoverTrigger>
             <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E]">
-              <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
-                <UserRound className="w-4 h-4" />
-                Profile Settings
-              </button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15"
+                  >
+                    <UserRound className="w-4 h-4" />
+                    Profile Settings
+                  </button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Profile Settings</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+
               <button
                 onClick={logout}
                 className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15"
