@@ -52,8 +52,6 @@ export default function Chats() {
     if (!context.initialized) {
       validateUser();
     } else {
-      console.log("User:", context.user);
-  
       if (context.user.imgUrl === "" || context.user.imgUrl === undefined) {
         setOpenProfileDialog(true);
       }
@@ -95,7 +93,6 @@ export default function Chats() {
 
       if (req.status === 200) {
         const res = await req.json();
-        console.log("Profile updated successfully:", res);
         context.setUser(res.body);
         context.setInitialized(true);
         context.setLoggedIn(true);
