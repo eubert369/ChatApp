@@ -126,7 +126,7 @@ export default function Sidebar() {
 
                     <div className="w-full h-fit flex flex-col gap-3">
                       <div className="w-full h-fit flex items-center gap-4">
-                        <div className="w-full h-fit flex flex-col gap-2">
+                        <div className="w-full h-fit flex flex-col gap-1">
                           <label
                             htmlFor="firstName"
                             className="text-[#183B4E] font-sans font-medium text-sm"
@@ -140,7 +140,7 @@ export default function Sidebar() {
                             defaultValue={context?.user.firstName}
                           />
                         </div>
-                        <div className="w-full h-fit flex flex-col gap-2">
+                        <div className="w-full h-fit flex flex-col gap-1">
                           <label
                             htmlFor="lastName"
                             className="text-[#183B4E] font-sans font-medium text-sm"
@@ -155,7 +155,7 @@ export default function Sidebar() {
                           />
                         </div>
                       </div>
-                      <div className="w-full h-fit flex flex-col gap-2">
+                      <div className="w-full h-fit flex flex-col gap-1">
                         <label
                           htmlFor="email"
                           className="text-[#183B4E] font-sans font-medium text-sm"
@@ -170,7 +170,7 @@ export default function Sidebar() {
                         />
                       </div>
                       <div className="w-full h-fit flex items-center gap-4">
-                        <div className="w-full h-fit flex flex-col gap-2">
+                        <div className="w-full h-fit flex flex-col gap-1">
                           <label
                             htmlFor="username"
                             className="text-[#183B4E] font-sans font-medium text-sm"
@@ -184,7 +184,7 @@ export default function Sidebar() {
                             defaultValue={context?.user.username}
                           />
                         </div>
-                        <div className="w-full h-fit flex flex-col gap-2">
+                        <div className="w-full h-fit flex flex-col gap-1">
                           <label
                             htmlFor="password"
                             className="text-[#183B4E] font-sans font-medium text-sm"
@@ -202,10 +202,10 @@ export default function Sidebar() {
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-3">
-                      <DialogClose className="bg-none border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-[#183B4E] text-sm cursor-pointer hover:scale-110 transition-all duration-200">
+                      <DialogClose className="bg-none border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-[#183B4E] font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200">
                         Discard
                       </DialogClose>
-                      <button className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white text-sm cursor-pointer hover:scale-110 transition-all duration-200">
+                      <button className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200">
                         Save
                       </button>
                     </div>
