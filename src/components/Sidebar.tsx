@@ -118,7 +118,7 @@ export default function Sidebar() {
                         <button className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200">
                           Change picture
                         </button>
-                        <button className="bg-none border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-[#183B4E] text-sm hover:scale-105 transition-all duration-200">
+                        <button className="bg-[#E52020] border border-[#E52020] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200">
                           Delete picture
                         </button>
                       </div>
