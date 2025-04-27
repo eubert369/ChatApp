@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
 import Contacts from "./Contacts";
-import { contactTypes } from "./Types";
+import { contactTypes, userTypes } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Dialog,
@@ -11,8 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
+  DialogClose,
 } from "./ui/dialog";
+import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
 
@@ -44,6 +45,39 @@ const listOfContactTypes: contactTypes[] = [
 export default function Sidebar() {
   const router = useRouter();
   const context = useContext(Context);
+  const [firstName, setFirstName] = useState<string>(
+    context?.user.firstName || ""
+  );
+  const [lastName, setLastName] = useState<string>(
+    context?.user.lastName || ""
+  );
+  const [email, setEmail] = useState<string>(context?.user.email || "");
+  const [username, setUsername] = useState<string>(
+    context?.user.username || ""
+  );
+  const [password, setPassword] = useState<string>(
+    context?.user.password || ""
+  );
+  const [imgUrl, setImgUrl] = useState<string>(
+    context?.user.imgUrl || "/icons/user-filler-icon.svg"
+  );
+
+  const setContextData = (user: userTypes | undefined) => {
+    if (user) {
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setEmail(user.email);
+      setUsername(user.username);
+      setPassword(user.password);
+      setImgUrl(user.imgUrl);
+    }
+  };
+
+  useEffect(() => {
+    if (context?.user) {
+      setContextData(context.user);
+    }
+  }, [context]);
 
   const logout = async () => {
     try {
@@ -73,6 +107,49 @@ export default function Sidebar() {
     }
   };
 
+  const handleProfileImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProfileFormSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    try {
+      const request = await fetch("/api/users/profile/update", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          username,
+          password,
+          type: context?.user.type,
+          imgUrl,
+        }),
+      });
+
+      if (request.status === 200) {
+        const user = await request.json();
+        // context?.setUser(user);
+        toast.success("Profile updated successfully");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-[#183B4E] w-fit min-w-[350px] max-w-[420px] h-full rounded-2xl flex flex-col">
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
@@ -85,7 +162,10 @@ export default function Sidebar() {
             <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E]">
               <Dialog>
                 <DialogTrigger asChild>
-                  <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
+                  <button
+                    onClick={() => setContextData(context?.user)}
+                    className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15"
+                  >
                     <UserRound className="w-4 h-4" />
                     Profile Settings
                   </button>
@@ -100,14 +180,14 @@ export default function Sidebar() {
                       You can change your profile here seamlessly.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="w-full h-fit flex flex-col gap-6">
+                  <form
+                    onSubmit={handleProfileFormSubmit}
+                    className="w-full h-fit flex flex-col gap-6"
+                  >
                     <div className="w-full h-fit flex items-center gap-3">
                       <div className="relative w-28 h-28 rounded-full overflow-hidden">
                         <Image
-                          src={
-                            context?.user.imgUrl ||
-                            "/icons/user-filler-icon.svg"
-                          }
+                          src={imgUrl || "/icons/user-filler-icon.svg"}
                           alt="Image Icon"
                           sizes="100"
                           fill
@@ -115,10 +195,24 @@ export default function Sidebar() {
                         />
                       </div>
                       <div className="w-fit h-fit flex flex-col gap-2">
-                        <button className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200">
+                        <input
+                          type="file"
+                          hidden
+                          id="profileImg"
+                          accept="image/*"
+                          onChange={handleProfileImgChange}
+                        />
+                        <label
+                          htmlFor="profileImg"
+                          className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200"
+                        >
                           Change picture
-                        </button>
-                        <button className="bg-[#E52020] border border-[#E52020] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200">
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setImgUrl("")}
+                          className="bg-[#E52020] border border-[#E52020] w-fit h-fit px-3 py-1 rounded-md text-white text-sm hover:scale-105 transition-all duration-200"
+                        >
                           Delete picture
                         </button>
                       </div>
@@ -134,10 +228,12 @@ export default function Sidebar() {
                             First Name
                           </label>
                           <input
+                            required
                             type="text"
                             id="firstName"
                             className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E]/30 focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                            defaultValue={context?.user.firstName}
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
                           />
                         </div>
                         <div className="w-full h-fit flex flex-col gap-1">
@@ -148,10 +244,12 @@ export default function Sidebar() {
                             Last Name
                           </label>
                           <input
+                            required
                             type="text"
                             id="lastName"
                             className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E]/30 focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                            defaultValue={context?.user.lastName}
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                           />
                         </div>
                       </div>
@@ -163,10 +261,12 @@ export default function Sidebar() {
                           Email
                         </label>
                         <input
+                          required
                           type="email"
                           id="email"
                           className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E]/30 focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                          defaultValue={context?.user.email}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </div>
                       <div className="w-full h-fit flex items-center gap-4">
@@ -178,10 +278,12 @@ export default function Sidebar() {
                             Username
                           </label>
                           <input
+                            required
                             type="text"
                             id="username"
                             className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E]/30 focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                            defaultValue={context?.user.username}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                           />
                         </div>
                         <div className="w-full h-fit flex flex-col gap-1">
@@ -192,24 +294,32 @@ export default function Sidebar() {
                             Password
                           </label>
                           <input
+                            required
                             type="password"
                             id="password"
                             className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E]/30 focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                            defaultValue={context?.user.password}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
                       </div>
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-3">
-                      <DialogClose className="bg-none border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-[#183B4E] font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200">
+                      <DialogClose
+                        type="button"
+                        className="bg-none border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-[#183B4E] font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200"
+                      >
                         Discard
                       </DialogClose>
-                      <button className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200">
+                      <button
+                        type="submit"
+                        className="bg-[#183B4E] border border-[#183B4E] w-fit h-fit px-3 py-1 rounded-md text-white font-semibold text-sm cursor-pointer hover:scale-110 transition-all duration-200"
+                      >
                         Save
                       </button>
                     </div>
-                  </div>
+                  </form>
                 </DialogContent>
               </Dialog>
 
