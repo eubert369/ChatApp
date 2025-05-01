@@ -46,20 +46,20 @@ export default function Sidebar() {
   const router = useRouter();
   const context = useContext(Context);
   const [firstName, setFirstName] = useState<string>(
-    context?.user.firstName || ""
+    context ? context.user.firstName : ""
   );
   const [lastName, setLastName] = useState<string>(
-    context?.user.lastName || ""
+    context ? context.user.lastName : ""
   );
-  const [email, setEmail] = useState<string>(context?.user.email || "");
+  const [email, setEmail] = useState<string>(context ? context.user.email : "");
   const [username, setUsername] = useState<string>(
-    context?.user.username || ""
+    context ? context.user.username : ""
   );
   const [password, setPassword] = useState<string>(
-    context?.user.password || ""
+    context ? context.user.password : ""
   );
   const [imgUrl, setImgUrl] = useState<string>(
-    context?.user.imgUrl || "/icons/user-filler-icon.svg"
+    context ? context.user.imgUrl : "/icons/user-filler-icon.svg"
   );
 
   const setContextData = (user: userTypes | undefined) => {
@@ -124,6 +124,7 @@ export default function Sidebar() {
     event.preventDefault();
 
     try {
+      toast.loading("Updating profile...");
       const request = await fetch("/api/users/profile/update", {
         headers: {
           "Content-Type": "application/json",
@@ -144,6 +145,8 @@ export default function Sidebar() {
         const user = await request.json();
         // context?.setUser(user);
         toast.success("Profile updated successfully");
+      } else {
+        toast.error(`${request.status} Failed to update profile`);
       }
     } catch (error) {
       console.error(error);

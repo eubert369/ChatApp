@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Navbar withSelectedConvo={router.pathname !== "/chats"} />
           {children}
         </main>
-        <Toaster />
+        <Toaster richColors theme="light" position="top-right" />
       </div>
     );
   } else {

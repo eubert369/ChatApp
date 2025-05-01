@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function Chats() {
   const router = useRouter();
@@ -58,7 +59,6 @@ export default function Chats() {
     }
   }, [context, router]);
 
-
   const handleProfileImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -75,6 +75,7 @@ export default function Chats() {
   ) => {
     e.preventDefault();
     try {
+      toast.loading("Updating profile...");
       const req = await fetch("/api/users/profile/update", {
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +97,10 @@ export default function Chats() {
         context.setUser(res.body);
         context.setInitialized(true);
         context.setLoggedIn(true);
+        toast.success("Profile updated successfully");
         setOpenProfileDialog(false);
+      } else {
+        toast.error(`${req.status} Failed to update profile`);
       }
     } catch (error) {
       console.error(error);
