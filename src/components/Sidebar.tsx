@@ -1,6 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { EllipsisVertical, Search, LogOut, UserRound } from "lucide-react";
+import {
+  EllipsisVertical,
+  Search,
+  LogOut,
+  UserRound,
+  MessageSquarePlus,
+} from "lucide-react";
 import Contacts from "./Contacts";
 import { contactTypes, userTypes } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -140,7 +146,9 @@ export default function Sidebar() {
           context.setLoggedIn(true);
         }
       } else {
-        toast.error(`${request.status} Failed to update profile`, { id: loadingId });
+        toast.error(`${request.status} Failed to update profile`, {
+          id: loadingId,
+        });
       }
     } catch (error) {
       console.error(error);
@@ -154,9 +162,33 @@ export default function Sidebar() {
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
           <Popover>
             <PopoverTrigger className="cursor-pointer">
-              <EllipsisVertical className="w-6 h-6 text-white hover:scale-105" />
+              <EllipsisVertical className="w-6 h-6 text-white hover:scale-125 transition-all duration-200" />
             </PopoverTrigger>
             <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E]">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
+                    <MessageSquarePlus className="w-4 h-4" />
+                    Start New Conversation
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="w-full bg-[#F5EEDC] text-[#183B4E]">
+                  <DialogHeader className="border-b border-[#183B4E]/30 pb-2">
+                    <DialogTitle>Start Conversation</DialogTitle>
+                    <DialogDescription>
+                      Connect with people to initiate your conversation.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="w-full h-fit flex flex-col gap-3">
+                    <input
+                      type="text"
+                      className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E] focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
+                     
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               <Dialog>
                 <DialogTrigger asChild>
                   <button
@@ -341,7 +373,6 @@ export default function Sidebar() {
           />
         </div>
       </div>
-
       <div className="px-2 w-full h-full flex flex-col overflow-y-auto">
         {listOfContactTypes.map((contact, id) => (
           <Contacts
