@@ -45,22 +45,12 @@ const listOfContactTypes: contactTypes[] = [
 export default function Sidebar() {
   const router = useRouter();
   const context = useContext(Context);
-  const [firstName, setFirstName] = useState<string>(
-    context ? context.user.firstName : ""
-  );
-  const [lastName, setLastName] = useState<string>(
-    context ? context.user.lastName : ""
-  );
-  const [email, setEmail] = useState<string>(context ? context.user.email : "");
-  const [username, setUsername] = useState<string>(
-    context ? context.user.username : ""
-  );
-  const [password, setPassword] = useState<string>(
-    context ? context.user.password : ""
-  );
-  const [imgUrl, setImgUrl] = useState<string>(
-    context ? context.user.imgUrl : "/icons/user-filler-icon.svg"
-  );
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("/icons/user-filler-icon.svg");
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -124,7 +114,7 @@ export default function Sidebar() {
     event.preventDefault();
 
     try {
-      toast.loading("Updating profile...");
+      const loadingId = toast.loading("Updating profile...");
       const request = await fetch("/api/users/profile/update", {
         headers: {
           "Content-Type": "application/json",
@@ -142,11 +132,15 @@ export default function Sidebar() {
       });
 
       if (request.status === 200) {
-        const user = await request.json();
-        // context?.setUser(user);
-        toast.success("Profile updated successfully");
+        const res = await request.json();
+        toast.success("Profile updated successfully", { id: loadingId });
+        if (context) {
+          context.setUser(res.user);
+          context.setInitialized(true);
+          context.setLoggedIn(true);
+        }
       } else {
-        toast.error(`${request.status} Failed to update profile`);
+        toast.error(`${request.status} Failed to update profile`, { id: loadingId });
       }
     } catch (error) {
       console.error(error);

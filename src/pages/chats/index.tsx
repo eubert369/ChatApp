@@ -56,6 +56,7 @@ export default function Chats() {
       if (context.user.imgUrl === "" || context.user.imgUrl === undefined) {
         setOpenProfileDialog(true);
       }
+      
     }
   }, [context, router]);
 
@@ -75,7 +76,7 @@ export default function Chats() {
   ) => {
     e.preventDefault();
     try {
-      toast.loading("Updating profile...");
+      const loadingId = toast.loading("Updating profile...");
       const req = await fetch("/api/users/profile/update", {
         headers: {
           "Content-Type": "application/json",
@@ -94,10 +95,12 @@ export default function Chats() {
 
       if (req.status === 200) {
         const res = await req.json();
-        context.setUser(res.body);
-        context.setInitialized(true);
-        context.setLoggedIn(true);
-        toast.success("Profile updated successfully");
+        if (context) {
+          context.setUser(res.user);
+          context.setInitialized(true);
+          context.setLoggedIn(true);
+        }
+        toast.success("Profile updated successfully", { id: loadingId });
         setOpenProfileDialog(false);
       } else {
         toast.error(`${req.status} Failed to update profile`);
