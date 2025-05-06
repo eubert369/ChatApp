@@ -157,6 +157,13 @@ export default function Sidebar() {
     }
   };
 
+  const handleStartConvoSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    toast.success("Submit Clicked");
+  };
+
   return (
     <div className="bg-[#183B4E] w-fit min-w-[350px] max-w-[420px] h-full rounded-2xl flex flex-col">
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
@@ -174,19 +181,52 @@ export default function Sidebar() {
                     Start New Conversation
                   </button>
                 </DialogTrigger>
-                <DialogContent className="w-full bg-[#F5EEDC] text-[#183B4E]">
+                <DialogContent
+                  showCloseButton={false}
+                  className="w-full bg-[#F5EEDC] text-[#183B4E]"
+                >
                   <DialogHeader className="border-b border-[#183B4E]/30 pb-2">
                     <DialogTitle>Start Conversation</DialogTitle>
                     <DialogDescription>
                       Connect with people to initiate your conversation.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="w-full h-fit flex flex-col gap-3">
-                    <input
-                      type="text"
-                      className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E] focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                    />
-                  </div>
+                  <form
+                    onSubmit={handleStartConvoSubmit}
+                    className="w-full h-fit flex flex-col gap-3"
+                  >
+                    <div className="w-full h-fit flex flex-col gap-1">
+                      <label htmlFor="nameEmail">Name/Email</label>
+                      <input
+                        id="nameEmail"
+                        type="text"
+                        placeholder="Start typing names or emails"
+                        className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
+                      />
+                    </div>
+
+                    <div className="w-full h-fit flex flex-col gap-1">
+                      <label htmlFor="message">Message</label>
+                      <textarea
+                        id="message"
+                        rows={4}
+                        placeholder="Type your message..."
+                        className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
+                      ></textarea>
+                    </div>
+
+                    <div className="w-full h-fit flex items-center justify-end gap-2">
+                      <DialogClose className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
+                        Cancel
+                      </DialogClose>
+                      <button
+                        type="submit"
+                        className="w-fit h-fit px-3 py-1 bg-[#183B4E] text-white rounded-md cursor-pointer hover:scale-105 transition-all duration-100"
+                      >
+                        Create
+                      </button>
+                    </div>
+                  </form>
                 </DialogContent>
               </Dialog>
 
