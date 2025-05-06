@@ -4,24 +4,21 @@ import { auth } from "./firebase/Config";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
+import { toast } from "sonner";
 
 const provider = new GoogleAuthProvider();
 
-export default function GoogleAuthBtn({
-  setLoading,
-}: {
-  setLoading: (value: boolean) => void;
-}) {
+export default function GoogleAuthBtn() {
   const router = useRouter();
   const context = useContext(Context);
 
   const clickEvent = async () => {
     try {
       const googleSignIn = await signInWithPopup(auth, provider);
+      const loadingID = toast.loading("Logging in");
       const user = googleSignIn.user;
 
       if (user) {
-        setLoading(true);
         const displayName: string[] | undefined = user.displayName?.split(" ");
 
         const firstName: string = displayName
@@ -47,9 +44,9 @@ export default function GoogleAuthBtn({
 
         if (req.status === 200) {
           const res = await req.json();
-          setLoading(false);
           context?.setUser(res.user);
           context?.setLoggedIn(true);
+          toast.success("Loggedin successfully", { id: loadingID });
           router.push("/chats");
         }
       }

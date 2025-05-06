@@ -46,7 +46,7 @@ export default async function handler(
           email: email,
           username: "",
           password: "",
-          imgURL: imgURL,
+          imgUrl: imgURL,
         });
 
         const tokenToBeEncoded: { id: string; user: string } = {
