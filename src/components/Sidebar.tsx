@@ -77,6 +77,7 @@ export default function Sidebar() {
 
   const logout = async () => {
     try {
+      const loadingID = toast.loading("Logging out");
       const request = await fetch("/api/logout", {
         headers: {
           "Content-Type": "application/json",
@@ -96,6 +97,7 @@ export default function Sidebar() {
           imgUrl: "",
         });
         context?.setInitialized(false);
+        toast.success("Logged out successfully", { id: loadingID });
         router.push("/");
       }
     } catch (error) {
@@ -183,7 +185,6 @@ export default function Sidebar() {
                     <input
                       type="text"
                       className="w-full h-fit px-3 py-1 rounded-md border border-[#183B4E] focus:outline-none focus:border-[#183B4E] text-[#183B4E]"
-                     
                     />
                   </div>
                 </DialogContent>

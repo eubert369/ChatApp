@@ -2,8 +2,8 @@ import React, { FormEvent, useContext, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import GoogleAuthBtn from "@/components/GoogleAuthBtn";
-import LoadingComponent from "@/components/LoadingComponent";
 import { Context } from "@/components/ContextProvider";
+import { toast } from "sonner";
 
 export default function Login() {
   const context = useContext(Context);
@@ -12,14 +12,12 @@ export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [invalidCredentials, setInvalidCredentials] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const formSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       setInvalidCredentials(false);
-      setLoading(true);
-
+      const loadingID = toast.loading("Logging in");
       const req = await fetch("/api/login", {
         headers: {
           "Content-Type": "application/json",
@@ -35,12 +33,12 @@ export default function Login() {
         const res = await req.json();
         context?.setUser(res.user);
         context?.setLoggedIn(true);
+        toast.success("Loggedin successfully", { id: loadingID });
         console.log("success", res, router.pathname);
 
         router.push("/chats");
       } else {
-        setInvalidCredentials(true);
-        setLoading(false);
+        toast.error("Invcorrect username or password", { id: loadingID });
       }
     } catch (error) {
       console.error(error);
@@ -105,7 +103,7 @@ export default function Login() {
           >
             Login
           </button>
-          <GoogleAuthBtn setLoading={setLoading} />
+          <GoogleAuthBtn />
 
           <p className="font-sans font-normal text-xs text-[#183B4E] text-center">
             Don&apos;t have an Account?{" "}
@@ -115,7 +113,6 @@ export default function Login() {
           </p>
         </div>
       </form>
-      {loading && <LoadingComponent />}
     </div>
   );
 }

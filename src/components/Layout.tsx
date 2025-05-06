@@ -24,6 +24,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
     );
   } else {
-    return <main>{children}</main>;
+    return (
+      <>
+        <main>{children}</main>
+        <Toaster richColors theme="light" position="top-right" />
+      </>
+    );
   }
 }
