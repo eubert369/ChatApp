@@ -57,6 +57,7 @@ export default function Sidebar() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [imgUrl, setImgUrl] = useState<string>("/icons/user-filler-icon.svg");
+  const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -161,7 +162,22 @@ export default function Sidebar() {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    toast.success("Submit Clicked");
+    try {
+      const loadingID = toast.loading("Sending message");
+      const req = await fetch("/api/messages/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const res = await req.json();
+
+      console.log("response", res);
+
+      toast.success("Submit Clicked", { id: loadingID });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -195,14 +211,22 @@ export default function Sidebar() {
                     onSubmit={handleStartConvoSubmit}
                     className="w-full h-fit flex flex-col gap-3"
                   >
-                    <div className="w-full h-fit flex flex-col gap-1">
+                    <div className="w-full h-fit flex flex-col gap-1 relative">
                       <label htmlFor="nameEmail">Name/Email</label>
                       <input
                         id="nameEmail"
                         type="text"
+                        onFocus={() => setOpenUserSearch(true)}
+                        onBlur={() => setOpenUserSearch(false)}
+                        autoComplete="off"
                         placeholder="Start typing names or emails"
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
                       />
+                      {openUserSearch && (
+                        <div className="absolute -bottom-[80%] w-full p-3 bg-[#F5EEDC] border shadow-md rounded-md">
+                          test
+                        </div>
+                      )}
                     </div>
 
                     <div className="w-full h-fit flex flex-col gap-1">
