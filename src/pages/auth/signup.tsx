@@ -19,7 +19,7 @@ export default function Signup() {
     event.preventDefault();
     try {
       const loadingID = toast.loading("Creating account");
-      const req = await fetch("/api/signup", {
+      const req = await fetch("/api/auth/signup", {
         headers: {
           "Content-Type": "application/json",
         },

@@ -18,7 +18,7 @@ export default function Login() {
     try {
       setInvalidCredentials(false);
       const loadingID = toast.loading("Logging in");
-      const req = await fetch("/api/login", {
+      const req = await fetch("/api/auth/login", {
         headers: {
           "Content-Type": "application/json",
         },

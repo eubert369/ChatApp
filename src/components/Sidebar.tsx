@@ -78,7 +78,7 @@ export default function Sidebar() {
   const logout = async () => {
     try {
       const loadingID = toast.loading("Logging out");
-      const request = await fetch("/api/logout", {
+      const request = await fetch("/api/auth/logout", {
         headers: {
           "Content-Type": "application/json",
         },

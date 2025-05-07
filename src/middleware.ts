@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith("/chats") && !!token) {
     try {
-      const req = await fetch(`${request.nextUrl.origin}/api/validator`, {
+      const req = await fetch(`${request.nextUrl.origin}/api/auth/validator`, {
         headers: {
           "Content-Type": "application/json",
         },
