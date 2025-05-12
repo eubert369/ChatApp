@@ -211,20 +211,36 @@ export default function Sidebar() {
                     onSubmit={handleStartConvoSubmit}
                     className="w-full h-fit flex flex-col gap-3"
                   >
-                    <div className="w-full h-fit flex flex-col gap-1 relative">
+                    <div className="w-full h-fit inline-flex flex-col gap-1 relative">
                       <label htmlFor="nameEmail">Name/Email</label>
                       <input
                         id="nameEmail"
                         type="text"
-                        onFocus={() => setOpenUserSearch(true)}
+                        onKeyUp={(e) =>
+                          setOpenUserSearch(e.currentTarget.value.length > 0)
+                        }
+                        onFocus={(e) =>
+                          setOpenUserSearch(e.target.value.length > 0)
+                        }
                         onBlur={() => setOpenUserSearch(false)}
                         autoComplete="off"
                         placeholder="Start typing names or emails"
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
                       />
                       {openUserSearch && (
-                        <div className="absolute -bottom-[80%] w-full p-3 bg-[#F5EEDC] border shadow-md rounded-md">
-                          test
+                        <div className="absolute end-0 top-16 z-auto w-full h-fit max-h-44 overflow-y-auto bg-[#F5EEDC] border shadow-md rounded-md flex flex-col gap-1">
+                          <button
+                            type="button"
+                            className="w-full h-fit p-3 flex items-center cursor-pointer hover:bg-black/10"
+                          >
+                            <Image
+                              alt="img-icon"
+                              width={40}
+                              height={40}
+                              src="/img/profile-pic3.png"
+                              className="rounded-full"
+                            />
+                          </button>                         
                         </div>
                       )}
                     </div>
