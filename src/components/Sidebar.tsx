@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
+import { userSearchTypes } from "./Types";
 
 const listOfContactTypes: contactTypes[] = [
   {
@@ -58,6 +59,8 @@ export default function Sidebar() {
   const [password, setPassword] = useState<string>("");
   const [imgUrl, setImgUrl] = useState<string>("/icons/user-filler-icon.svg");
   const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
+  const [userSearchMatched, setUserSearchMatched] = useState<boolean>(false);
+  const [searchedUsers, setSearchedUsers] = useState<userSearchTypes[]>([]);
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -158,6 +161,40 @@ export default function Sidebar() {
     }
   };
 
+  const handleUserSearch = async (str: string) => {
+    try {
+      if (str.length > 0) {
+        const request = await fetch(`/api/users/search/${str}`);
+        const response = await request.json();
+
+        if (request.status === 200 && response.items.length > 0) {
+          setUserSearchMatched(true);
+          setSearchedUsers(response.items);
+          console.log("response:", response);
+        } else if (request.status === 401) {
+          context?.setLoggedIn(false);
+          context?.setUser({
+            firstName: "",
+            lastName: "",
+            email: "",
+            username: "",
+            password: "",
+            type: "",
+            imgUrl: "",
+          });
+          context?.setInitialized(false);
+          toast.warning("Session Timed out");
+          router.push("/");
+        } else {
+          setUserSearchMatched(false);
+          console.log("response:", "Nothing Matches");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleStartConvoSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -216,9 +253,11 @@ export default function Sidebar() {
                       <input
                         id="nameEmail"
                         type="text"
-                        onKeyUp={(e) =>
-                          setOpenUserSearch(e.currentTarget.value.length > 0)
-                        }
+                        onKeyUp={(e) => {
+                          setUserSearchMatched(false);
+                          setOpenUserSearch(e.currentTarget.value.length > 0);
+                          handleUserSearch(e.currentTarget.value);
+                        }}
                         onFocus={(e) =>
                           setOpenUserSearch(e.target.value.length > 0)
                         }
@@ -229,18 +268,39 @@ export default function Sidebar() {
                       />
                       {openUserSearch && (
                         <div className="absolute end-0 top-16 z-auto w-full h-fit max-h-44 overflow-y-auto bg-[#F5EEDC] border shadow-md rounded-md flex flex-col gap-1">
-                          <button
-                            type="button"
-                            className="w-full h-fit p-3 flex items-center cursor-pointer hover:bg-black/10"
-                          >
-                            <Image
-                              alt="img-icon"
-                              width={40}
-                              height={40}
-                              src="/img/profile-pic3.png"
-                              className="rounded-full"
-                            />
-                          </button>                         
+                          {userSearchMatched ? (
+                            searchedUsers.map((user, id) => (
+                              <button
+                                key={id}
+                                type="button"
+                                className="w-full h-fit p-3 flex items-center gap-3 cursor-pointer hover:bg-black/10"
+                              >
+                                <Image
+                                  alt="img-icon"
+                                  width={40}
+                                  height={40}
+                                  src={
+                                    user.imgUrl.length > 0
+                                      ? user.imgUrl
+                                      : "/icons/user-filler-icon.svg"
+                                  }
+                                  className="rounded-full"
+                                />
+                                <div className="w-full h-fit flex flex-col">
+                                  <h5 className="text-base text-[#183B4E] text-start font-medium">
+                                    {user.name}
+                                  </h5>
+                                  <p className="text-xs text-muted-foreground text-start font-normal">
+                                    {user.email}
+                                  </p>
+                                </div>
+                              </button>
+                            ))
+                          ) : (
+                            <span className="text-[#183B4E]">
+                              Searching ...
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>

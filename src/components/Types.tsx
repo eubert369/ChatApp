@@ -30,3 +30,10 @@ export interface contextTypes {
   initialized: boolean;
   setInitialized: (value: boolean) => void;
 }
+
+export interface userSearchTypes {
+  id: string;
+  name: string;
+  email: string;
+  imgUrl: string;
+}
