@@ -1,6 +1,6 @@
-# Chat Application
+# LetsChat
 
-Welcome to the Chat Application! This project is a simple chat application built using modern web technologies. It serves as a practice project to enhance my skills in web development.
+Welcome to the LetsChat! This project is a simple chat application built using modern web technologies. It serves as a practice project to enhance my skills in web development.
 
 ## Table of Contents
 
