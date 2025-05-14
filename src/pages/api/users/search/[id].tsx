@@ -11,8 +11,6 @@ export default async function handler(
 
   if (stringToken) {
     try {
-      // const token = JSON.parse(stringToken);
-
       const querySnapshot = await getDocs(collection(db, "users"));
       const users = querySnapshot.docs.map((users) => ({
         id: users.id,

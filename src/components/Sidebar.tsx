@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   EllipsisVertical,
@@ -62,9 +62,12 @@ export default function Sidebar() {
   const [userSearchMatched, setUserSearchMatched] = useState<boolean>(false);
   const [searchedUsers, setSearchedUsers] = useState<userSearchTypes[]>([]);
   const [createConvoForm, setCreateConvoForm] = useState<createConvoFormTypes>({
+    name: "",
     recipientId: "",
     message: "",
   });
+
+  const closeCreateMessageDialog = useRef<HTMLButtonElement | null>(null);
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -207,22 +210,36 @@ export default function Sidebar() {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    const loadingID = toast.loading("Sending message");
     try {
-      const loadingID = toast.loading("Sending message");
       const req = await fetch("/api/messages/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ senderId: context?.currentUserId, ...createConvoForm })
+        body: JSON.stringify({
+          // senderId: context?.currentUserId,
+          recipientId: createConvoForm.recipientId,
+          message: createConvoForm.message,
+        }),
       });
       const res = await req.json();
 
-      console.log("response", res);
-
-      toast.success("Submit Clicked", { id: loadingID });
+      if (req.status === 200) {
+        console.log("response", res);
+        if (closeCreateMessageDialog.current) {
+          closeCreateMessageDialog.current.click()
+        }
+        toast.success("Submit Clicked", { id: loadingID });
+        router.push(`/chats/${res.convoId}`);
+      } else if (req.status === 409) {
+        toast.warning(`${res.message} with ${createConvoForm.name}`, {
+          id: loadingID,
+        });
+      }
     } catch (error) {
       console.error(error);
+      toast.error("Failed", { id: loadingID });
     }
   };
 
@@ -262,10 +279,14 @@ export default function Sidebar() {
                       <input
                         id="nameEmail"
                         type="text"
-                        onKeyUp={(e) => {
+                        onChange={(e) => {
                           setUserSearchMatched(false);
                           setOpenUserSearch(e.currentTarget.value.length > 0);
                           handleUserSearch(e.currentTarget.value);
+                          setCreateConvoForm({
+                            ...createConvoForm,
+                            name: e.currentTarget.value,
+                          });
 
                           if (e.currentTarget.value.length === 0) {
                             setCreateConvoForm({
@@ -277,6 +298,7 @@ export default function Sidebar() {
                         onFocus={(e) =>
                           setOpenUserSearch(e.target.value.length > 0)
                         }
+                        value={createConvoForm.name}
                         // onBlur={() => setOpenUserSearch(false)}
                         autoComplete="off"
                         placeholder="Start typing names or emails"
@@ -296,6 +318,7 @@ export default function Sidebar() {
                                   setCreateConvoForm({
                                     ...createConvoForm,
                                     recipientId: user.id,
+                                    name: user.name,
                                   });
                                 }}
                                 className="w-full h-fit p-3 flex items-center gap-3 cursor-pointer hover:bg-black/10"
@@ -349,7 +372,7 @@ export default function Sidebar() {
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-2">
-                      <DialogClose className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
+                      <DialogClose ref={closeCreateMessageDialog} className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
                         Cancel
                       </DialogClose>
                       <button

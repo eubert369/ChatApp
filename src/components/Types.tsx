@@ -42,5 +42,6 @@ export interface userSearchTypes {
 
 export interface createConvoFormTypes {
   recipientId: string;
+  name: string;
   message: string;
 }
