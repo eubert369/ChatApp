@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
           "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ token: decodeURIComponent(token.value) }),
+        body: JSON.stringify({ token: decodeURIComponent(atob(token.value)) }),
       });
 
       if (req.status === 200) {
