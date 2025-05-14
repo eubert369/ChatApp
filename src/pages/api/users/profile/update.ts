@@ -13,7 +13,7 @@ export default async function handler(
       const stringToken = req.cookies.token;
 
       if (stringToken) {
-        const token = JSON.parse(stringToken);
+        const token = JSON.parse(decodeURIComponent(atob(stringToken)));
 
         const docRef = doc(db, "users", `${token.id}`);
         await updateDoc(docRef, {
@@ -39,7 +39,7 @@ export default async function handler(
   } catch (error) {
     res.status(500).json({ message: `${error}` });
   }
-  res.status(200).json({ name: "John Doe" });
+  // res.status(200).json({ name: "John Doe" });
 }
 
 export const config = {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   EllipsisVertical,
@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
+import { userSearchTypes, createConvoFormTypes } from "./Types";
 
 const listOfContactTypes: contactTypes[] = [
   {
@@ -57,6 +58,16 @@ export default function Sidebar() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [imgUrl, setImgUrl] = useState<string>("/icons/user-filler-icon.svg");
+  const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
+  const [userSearchMatched, setUserSearchMatched] = useState<boolean>(false);
+  const [searchedUsers, setSearchedUsers] = useState<userSearchTypes[]>([]);
+  const [createConvoForm, setCreateConvoForm] = useState<createConvoFormTypes>({
+    name: "",
+    recipientId: "",
+    message: "",
+  });
+
+  const closeCreateMessageDialog = useRef<HTMLButtonElement | null>(null);
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -78,7 +89,7 @@ export default function Sidebar() {
   const logout = async () => {
     try {
       const loadingID = toast.loading("Logging out");
-      const request = await fetch("/api/logout", {
+      const request = await fetch("/api/auth/logout", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -96,6 +107,7 @@ export default function Sidebar() {
           type: "",
           imgUrl: "",
         });
+        context?.setCurrentUserId("");
         context?.setInitialized(false);
         toast.success("Logged out successfully", { id: loadingID });
         router.push("/");
@@ -157,11 +169,78 @@ export default function Sidebar() {
     }
   };
 
+  const handleUserSearch = async (str: string) => {
+    try {
+      if (str.length > 0) {
+        const request = await fetch(`/api/users/search/${str}`);
+        const response = await request.json();
+
+        if (request.status === 200 && response.items.length > 0) {
+          setUserSearchMatched(true);
+          setSearchedUsers(
+            response.items.filter(
+              (items: userSearchTypes) => items.id !== context?.currentUserId
+            )
+          );
+        } else if (request.status === 401) {
+          context?.setLoggedIn(false);
+          context?.setUser({
+            firstName: "",
+            lastName: "",
+            email: "",
+            username: "",
+            password: "",
+            type: "",
+            imgUrl: "",
+          });
+          context?.setInitialized(false);
+          toast.warning("Session Timed out");
+          router.push("/");
+        } else {
+          setUserSearchMatched(false);
+          console.log("response:", "Nothing Matches");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleStartConvoSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    toast.success("Submit Clicked");
+    const loadingID = toast.loading("Sending message");
+    try {
+      const req = await fetch("/api/messages/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // senderId: context?.currentUserId,
+          recipientId: createConvoForm.recipientId,
+          message: createConvoForm.message,
+        }),
+      });
+      const res = await req.json();
+
+      if (req.status === 200) {
+        console.log("response", res);
+        if (closeCreateMessageDialog.current) {
+          closeCreateMessageDialog.current.click()
+        }
+        toast.success("Submit Clicked", { id: loadingID });
+        router.push(`/chats/${res.convoId}`);
+      } else if (req.status === 409) {
+        toast.warning(`${res.message} with ${createConvoForm.name}`, {
+          id: loadingID,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed", { id: loadingID });
+    }
   };
 
   return (
@@ -195,14 +274,85 @@ export default function Sidebar() {
                     onSubmit={handleStartConvoSubmit}
                     className="w-full h-fit flex flex-col gap-3"
                   >
-                    <div className="w-full h-fit flex flex-col gap-1">
+                    <div className="w-full h-fit inline-flex flex-col gap-1 relative">
                       <label htmlFor="nameEmail">Name/Email</label>
                       <input
                         id="nameEmail"
                         type="text"
+                        onChange={(e) => {
+                          setUserSearchMatched(false);
+                          setOpenUserSearch(e.currentTarget.value.length > 0);
+                          handleUserSearch(e.currentTarget.value);
+                          setCreateConvoForm({
+                            ...createConvoForm,
+                            name: e.currentTarget.value,
+                          });
+
+                          if (e.currentTarget.value.length === 0) {
+                            setCreateConvoForm({
+                              ...createConvoForm,
+                              recipientId: "",
+                            });
+                          }
+                        }}
+                        onFocus={(e) =>
+                          setOpenUserSearch(e.target.value.length > 0)
+                        }
+                        value={createConvoForm.name}
+                        // onBlur={() => setOpenUserSearch(false)}
+                        autoComplete="off"
                         placeholder="Start typing names or emails"
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
                       />
+                      {openUserSearch && (
+                        <div className="absolute end-0 top-16 z-auto w-full h-fit max-h-44 overflow-y-auto bg-[#F5EEDC] border shadow-md rounded-md flex flex-col gap-1">
+                          {searchedUsers.length > 0 ? (
+                            searchedUsers.map((user, id) => (
+                              <button
+                                key={id}
+                                type="button"
+                                onClick={() => {
+                                  console.log("user ID:", user.id);
+                                  setUserSearchMatched(false);
+                                  setOpenUserSearch(false);
+                                  setCreateConvoForm({
+                                    ...createConvoForm,
+                                    recipientId: user.id,
+                                    name: user.name,
+                                  });
+                                }}
+                                className="w-full h-fit p-3 flex items-center gap-3 cursor-pointer hover:bg-black/10"
+                              >
+                                <Image
+                                  alt="img-icon"
+                                  width={40}
+                                  height={40}
+                                  src={
+                                    user.imgUrl.length > 0
+                                      ? user.imgUrl
+                                      : "/icons/user-filler-icon.svg"
+                                  }
+                                  className="rounded-full"
+                                />
+                                <div className="w-full h-fit flex flex-col">
+                                  <h5 className="text-base text-[#183B4E] text-start font-medium">
+                                    {user.name}
+                                  </h5>
+                                  <p className="text-xs text-muted-foreground text-start font-normal">
+                                    {user.email}
+                                  </p>
+                                </div>
+                              </button>
+                            ))
+                          ) : (
+                            <span className="text-[#183B4E] text-center">
+                              {userSearchMatched
+                                ? "No user found"
+                                : "Searching ..."}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="w-full h-fit flex flex-col gap-1">
@@ -211,12 +361,18 @@ export default function Sidebar() {
                         id="message"
                         rows={4}
                         placeholder="Type your message..."
+                        onKeyUp={(e) => {
+                          setCreateConvoForm({
+                            ...createConvoForm,
+                            message: e.currentTarget.value,
+                          });
+                        }}
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
                       ></textarea>
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-2">
-                      <DialogClose className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
+                      <DialogClose ref={closeCreateMessageDialog} className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
                         Cancel
                       </DialogClose>
                       <button

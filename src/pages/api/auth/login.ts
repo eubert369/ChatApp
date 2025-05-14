@@ -28,8 +28,8 @@ export default async function handler(
         };
         res.setHeader(
           "Set-Cookie",
-          `token=${encodeURIComponent(
-            JSON.stringify(tokenToBeEncoded)
+          `token=${btoa(
+            encodeURIComponent(JSON.stringify(tokenToBeEncoded))
           )}; Path=/; HttpOnly; Max-Age=3600; Secure; SameSite=Strict`
         );
       }

@@ -29,4 +29,19 @@ export interface contextTypes {
   setLoggedIn: (value: boolean) => void;
   initialized: boolean;
   setInitialized: (value: boolean) => void;
+  currentUserId: string;
+  setCurrentUserId: (value: string) => void;
+}
+
+export interface userSearchTypes {
+  id: string;
+  name: string;
+  email: string;
+  imgUrl: string;
+}
+
+export interface createConvoFormTypes {
+  recipientId: string;
+  name: string;
+  message: string;
 }

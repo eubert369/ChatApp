@@ -11,10 +11,10 @@ export default async function handler(
     const stringToken = req.cookies.token;
 
     if (stringToken) {
-      const token = JSON.parse(stringToken);
+      const token = JSON.parse(decodeURIComponent(atob(stringToken)));
       const docRef = doc(db, "users", `${token.id}`);
       const docSnap = await getDoc(docRef);
-      res.status(200).json(docSnap.data());
+      res.status(200).json({ id: token.id, ...docSnap.data() });
     } else {
       res.status(202).json({ message: "Invalid Cookie" });
     }

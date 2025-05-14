@@ -29,7 +29,7 @@ export default function GoogleAuthBtn() {
           ? displayName[displayName.length - 1]
           : "";
 
-        const req = await fetch("/api/oauth", {
+        const req = await fetch("/api/auth/oauth", {
           headers: {
             "Content-Type": "application/json",
           },

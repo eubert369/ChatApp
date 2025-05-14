@@ -18,7 +18,7 @@ export default function Login() {
     try {
       setInvalidCredentials(false);
       const loadingID = toast.loading("Logging in");
-      const req = await fetch("/api/login", {
+      const req = await fetch("/api/auth/login", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -32,6 +32,7 @@ export default function Login() {
       if (req.status === 200) {
         const res = await req.json();
         context?.setUser(res.user);
+        context?.setCurrentUserId(res.id);
         context?.setLoggedIn(true);
         toast.success("Loggedin successfully", { id: loadingID });
         console.log("success", res, router.pathname);

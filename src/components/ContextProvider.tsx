@@ -18,6 +18,7 @@ export default function ContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [currentUserId, setCurrentUserId] = useState<string>('');
   const [user, setUser] = useState<userTypes>(emptyUserProps);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -31,6 +32,8 @@ export default function ContextProvider({
         setLoggedIn,
         initialized,
         setInitialized,
+        currentUserId,
+        setCurrentUserId
       }}
     >
       {children}
