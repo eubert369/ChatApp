@@ -29,6 +29,8 @@ export interface contextTypes {
   setLoggedIn: (value: boolean) => void;
   initialized: boolean;
   setInitialized: (value: boolean) => void;
+  currentUserId: string;
+  setCurrentUserId: (value: string) => void;
 }
 
 export interface userSearchTypes {

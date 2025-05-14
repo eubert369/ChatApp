@@ -100,6 +100,7 @@ export default function Sidebar() {
           type: "",
           imgUrl: "",
         });
+        context?.setCurrentUserId("");
         context?.setInitialized(false);
         toast.success("Logged out successfully", { id: loadingID });
         router.push("/");
@@ -169,8 +170,9 @@ export default function Sidebar() {
 
         if (request.status === 200 && response.items.length > 0) {
           setUserSearchMatched(true);
-          setSearchedUsers(response.items);
-          console.log("response:", response);
+          setSearchedUsers(
+            response.items.filter((items: userSearchTypes) => items.id !== context?.currentUserId)
+          );
         } else if (request.status === 401) {
           context?.setLoggedIn(false);
           context?.setUser({
@@ -268,7 +270,7 @@ export default function Sidebar() {
                       />
                       {openUserSearch && (
                         <div className="absolute end-0 top-16 z-auto w-full h-fit max-h-44 overflow-y-auto bg-[#F5EEDC] border shadow-md rounded-md flex flex-col gap-1">
-                          {userSearchMatched ? (
+                          {searchedUsers.length > 0 ? (
                             searchedUsers.map((user, id) => (
                               <button
                                 key={id}
@@ -297,8 +299,8 @@ export default function Sidebar() {
                               </button>
                             ))
                           ) : (
-                            <span className="text-[#183B4E]">
-                              Searching ...
+                            <span className="text-[#183B4E] text-center">
+                              {userSearchMatched ? 'No user found' : 'Searching ...'}
                             </span>
                           )}
                         </div>

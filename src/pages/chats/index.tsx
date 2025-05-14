@@ -30,6 +30,7 @@ export default function Chats() {
         if (req.status === 200) {
           const user = await req.json();
           context.setUser(user);
+          context.setCurrentUserId(user.id);
           context.setInitialized(true);
           context.setLoggedIn(true);
         } else {
@@ -56,7 +57,6 @@ export default function Chats() {
       if (context.user.imgUrl === "" || context.user.imgUrl === undefined) {
         setOpenProfileDialog(true);
       }
-      
     }
   }, [context, router]);
 

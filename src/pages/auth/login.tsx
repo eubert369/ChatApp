@@ -32,6 +32,7 @@ export default function Login() {
       if (req.status === 200) {
         const res = await req.json();
         context?.setUser(res.user);
+        context?.setCurrentUserId(res.id);
         context?.setLoggedIn(true);
         toast.success("Loggedin successfully", { id: loadingID });
         console.log("success", res, router.pathname);
