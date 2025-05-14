@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
-import { userSearchTypes } from "./Types";
+import { userSearchTypes, createConvoFormTypes } from "./Types";
 
 const listOfContactTypes: contactTypes[] = [
   {
@@ -61,6 +61,10 @@ export default function Sidebar() {
   const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
   const [userSearchMatched, setUserSearchMatched] = useState<boolean>(false);
   const [searchedUsers, setSearchedUsers] = useState<userSearchTypes[]>([]);
+  const [createConvoForm, setCreateConvoForm] = useState<createConvoFormTypes>({
+    recipientId: "",
+    message: "",
+  });
 
   const setContextData = (user: userTypes | undefined) => {
     if (user) {
@@ -171,7 +175,9 @@ export default function Sidebar() {
         if (request.status === 200 && response.items.length > 0) {
           setUserSearchMatched(true);
           setSearchedUsers(
-            response.items.filter((items: userSearchTypes) => items.id !== context?.currentUserId)
+            response.items.filter(
+              (items: userSearchTypes) => items.id !== context?.currentUserId
+            )
           );
         } else if (request.status === 401) {
           context?.setLoggedIn(false);
@@ -208,6 +214,7 @@ export default function Sidebar() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ senderId: context?.currentUserId, ...createConvoForm })
       });
       const res = await req.json();
 
@@ -259,11 +266,18 @@ export default function Sidebar() {
                           setUserSearchMatched(false);
                           setOpenUserSearch(e.currentTarget.value.length > 0);
                           handleUserSearch(e.currentTarget.value);
+
+                          if (e.currentTarget.value.length === 0) {
+                            setCreateConvoForm({
+                              ...createConvoForm,
+                              recipientId: "",
+                            });
+                          }
                         }}
                         onFocus={(e) =>
                           setOpenUserSearch(e.target.value.length > 0)
                         }
-                        onBlur={() => setOpenUserSearch(false)}
+                        // onBlur={() => setOpenUserSearch(false)}
                         autoComplete="off"
                         placeholder="Start typing names or emails"
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
@@ -275,6 +289,15 @@ export default function Sidebar() {
                               <button
                                 key={id}
                                 type="button"
+                                onClick={() => {
+                                  console.log("user ID:", user.id);
+                                  setUserSearchMatched(false);
+                                  setOpenUserSearch(false);
+                                  setCreateConvoForm({
+                                    ...createConvoForm,
+                                    recipientId: user.id,
+                                  });
+                                }}
                                 className="w-full h-fit p-3 flex items-center gap-3 cursor-pointer hover:bg-black/10"
                               >
                                 <Image
@@ -300,7 +323,9 @@ export default function Sidebar() {
                             ))
                           ) : (
                             <span className="text-[#183B4E] text-center">
-                              {userSearchMatched ? 'No user found' : 'Searching ...'}
+                              {userSearchMatched
+                                ? "No user found"
+                                : "Searching ..."}
                             </span>
                           )}
                         </div>
@@ -313,6 +338,12 @@ export default function Sidebar() {
                         id="message"
                         rows={4}
                         placeholder="Type your message..."
+                        onKeyUp={(e) => {
+                          setCreateConvoForm({
+                            ...createConvoForm,
+                            message: e.currentTarget.value,
+                          });
+                        }}
                         className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
                       ></textarea>
                     </div>

@@ -39,3 +39,8 @@ export interface userSearchTypes {
   email: string;
   imgUrl: string;
 }
+
+export interface createConvoFormTypes {
+  recipientId: string;
+  message: string;
+}

@@ -6,7 +6,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (stringToken) {
       const token = JSON.parse(stringToken);
-      res.status(200).json({ token: token });
+      res.status(200).json({ token: token, reqBody: req.body });
     }
   }
 }
