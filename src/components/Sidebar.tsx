@@ -26,30 +26,6 @@ import { userSearchTypes, createConvoFormTypes } from "./Types";
 import { db } from "./firebase/Config";
 import { onSnapshot, collection, doc, getDoc } from "firebase/firestore";
 
-// const listOfContactTypes: contactTypes[] = [
-//   {
-//     imgSrc: "/img/profile-pic1.png",
-//     name: "Monkey D. Luffy",
-//     email: "Luffy: Hey",
-//     selected: true,
-//   },
-//   {
-//     imgSrc: "/img/profile-pic2.png",
-//     name: "Roronoa Zoro",
-//     email: "Zoro: Hey",
-//   },
-//   {
-//     imgSrc: "/img/profile-pic4.png",
-//     name: "Vinsmoke Sanji",
-//     email: "Nami: Hey",
-//   },
-
-//   {
-//     imgSrc: "/img/profile-pic3.png",
-//     name: "Catburglar Nami",
-//     email: "Sanji: Hey",
-//   },
-// ];
 
 export default function Sidebar() {
   const router = useRouter();
