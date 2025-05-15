@@ -53,6 +53,7 @@ import { onSnapshot, collection, doc, getDoc } from "firebase/firestore";
 
 export default function Sidebar() {
   const router = useRouter();
+  const { id } = router.query;
   const context = useContext(Context);
   const [listOfContacts, setListOfContacts] = useState<contactTypes[]>([]);
   const [firstName, setFirstName] = useState<string>("");
@@ -621,15 +622,15 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="px-2 w-full h-full flex flex-col overflow-y-auto">
-        {listOfContacts.map((contact, id) => (
+        {listOfContacts.map((contact, mapID) => (
           <Contacts
-            key={id}
+            key={mapID}
             contactId={contact.userId}
             userId={contact.userId}
             imgSrc={contact.imgSrc}
             name={contact.name}
             email={contact.email}
-            selected={contact.selected}
+            selected={!!id && id == contact.userId}
           />
         ))}
       </div>
