@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import ChatItem from "@/components/ChatItem";
+import { Context } from "@/components/ContextProvider";
 import { chatItemTypes } from "@/components/Types";
 
 const rawChats: chatItemTypes[] = [
@@ -41,8 +42,50 @@ const rawChats: chatItemTypes[] = [
 
 export default function ChatMate() {
   const router = useRouter();
+  const context = useContext(Context);
   const { id } = router.query;
   const [textareaFocused, setTextareaFocused] = useState<boolean>(false);
+
+  if (!context) {
+    throw new Error("ChildComponent must be used within a ContextProvider");
+  }
+
+  useEffect(() => {
+    const validateUser = async () => {
+      try {
+        const req = await fetch("/api/users/profile");
+        if (req.status === 200) {
+          const user = await req.json();
+          context.setUser(user);
+          context.setCurrentUserId(user.id);
+          context.setInitialized(true);
+          context.setLoggedIn(true);
+        } else {
+          const logout = await fetch("/api/logout", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+          });
+
+          if (logout.status === 200) {
+            context.setLoggedIn(false);
+            router.push("/");
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (!context.initialized) {
+      validateUser();
+    } else {
+      if (context.user.imgUrl === "" || context.user.imgUrl === undefined) {
+        console.log("Profile pic not initiated");
+      }
+    }
+  }, [context, router]);
 
   return (
     <>

@@ -126,7 +126,10 @@ export default function Sidebar() {
       const filteredConvoData = convoData.filter(
         (user) => user !== undefined
       ) as contactTypes[];
-      setListOfContacts(filteredConvoData);
+      setListOfContacts((previosData) => [
+        ...previosData,
+        ...filteredConvoData,
+      ]);
     });
   }, [context?.currentUserId]);
 
@@ -618,9 +621,9 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="px-2 w-full h-full flex flex-col overflow-y-auto">
-        {listOfContacts.map((contact) => (
+        {listOfContacts.map((contact, id) => (
           <Contacts
-            key={contact.userId}
+            key={id}
             contactId={contact.userId}
             userId={contact.userId}
             imgSrc={contact.imgSrc}
