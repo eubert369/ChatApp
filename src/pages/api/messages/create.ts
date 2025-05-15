@@ -11,7 +11,7 @@ export default async function handler(
     const { recipientId, message } = req.body;
 
     if (stringToken) {
-      const token = JSON.parse(stringToken);
+      const token = JSON.parse(decodeURIComponent(atob(stringToken)));
 
       try {
         const query1 = query(
