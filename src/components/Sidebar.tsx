@@ -23,35 +23,38 @@ import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
 import { userSearchTypes, createConvoFormTypes } from "./Types";
+import { db } from "./firebase/Config";
+import { onSnapshot, collection, doc, getDoc } from "firebase/firestore";
 
-const listOfContactTypes: contactTypes[] = [
-  {
-    imgSrc: "/img/profile-pic1.png",
-    name: "Monkey D. Luffy",
-    lastMessage: "Luffy: Hey",
-    selected: true,
-  },
-  {
-    imgSrc: "/img/profile-pic2.png",
-    name: "Roronoa Zoro",
-    lastMessage: "Zoro: Hey",
-  },
-  {
-    imgSrc: "/img/profile-pic4.png",
-    name: "Vinsmoke Sanji",
-    lastMessage: "Nami: Hey",
-  },
+// const listOfContactTypes: contactTypes[] = [
+//   {
+//     imgSrc: "/img/profile-pic1.png",
+//     name: "Monkey D. Luffy",
+//     email: "Luffy: Hey",
+//     selected: true,
+//   },
+//   {
+//     imgSrc: "/img/profile-pic2.png",
+//     name: "Roronoa Zoro",
+//     email: "Zoro: Hey",
+//   },
+//   {
+//     imgSrc: "/img/profile-pic4.png",
+//     name: "Vinsmoke Sanji",
+//     email: "Nami: Hey",
+//   },
 
-  {
-    imgSrc: "/img/profile-pic3.png",
-    name: "Catburglar Nami",
-    lastMessage: "Sanji: Hey",
-  },
-];
+//   {
+//     imgSrc: "/img/profile-pic3.png",
+//     name: "Catburglar Nami",
+//     email: "Sanji: Hey",
+//   },
+// ];
 
 export default function Sidebar() {
   const router = useRouter();
   const context = useContext(Context);
+  const [listOfContacts, setListOfContacts] = useState<contactTypes[]>([]);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -85,6 +88,47 @@ export default function Sidebar() {
       setContextData(context.user);
     }
   }, [context]);
+
+  useEffect(() => {
+    onSnapshot(collection(db, "conversations"), async (snapshot) => {
+      console.info("New Snapshot");
+      const filteredSnapshot = snapshot
+        .docChanges()
+        .filter(
+          (data) =>
+            data.doc.data().user1 == context?.currentUserId ||
+            data.doc.data().user2 == context?.currentUserId
+        );
+      const convoData = await Promise.all(
+        filteredSnapshot.map(async (snap) => {
+          const docRef = doc(
+            db,
+            "users",
+            snap.doc.data().user1 == context?.currentUserId
+              ? snap.doc.data().user2
+              : snap.doc.data().user1
+          );
+          const user = await getDoc(docRef);
+
+          if (user.exists()) {
+            return {
+              userId: user.id,
+              name: `${user.data().firstName} ${user.data().lastName}`,
+              imgSrc: `${user.data().imgUrl}`,
+              email: `${user.data().email}`,
+              selected: false,
+            };
+          }
+        })
+      );
+
+      console.log("covo users:", convoData);
+      const filteredConvoData = convoData.filter(
+        (user) => user !== undefined
+      ) as contactTypes[];
+      setListOfContacts(filteredConvoData);
+    });
+  }, [context?.currentUserId]);
 
   const logout = async () => {
     try {
@@ -228,7 +272,7 @@ export default function Sidebar() {
       if (req.status === 200) {
         console.log("response", res);
         if (closeCreateMessageDialog.current) {
-          closeCreateMessageDialog.current.click()
+          closeCreateMessageDialog.current.click();
         }
         toast.success("Submit Clicked", { id: loadingID });
         router.push(`/chats/${res.convoId}`);
@@ -372,7 +416,10 @@ export default function Sidebar() {
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-2">
-                      <DialogClose ref={closeCreateMessageDialog} className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100">
+                      <DialogClose
+                        ref={closeCreateMessageDialog}
+                        className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100"
+                      >
                         Cancel
                       </DialogClose>
                       <button
@@ -571,13 +618,14 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="px-2 w-full h-full flex flex-col overflow-y-auto">
-        {listOfContactTypes.map((contact, id) => (
+        {listOfContacts.map((contact) => (
           <Contacts
-            key={id}
-            contactId={id}
+            key={contact.userId}
+            contactId={contact.userId}
+            userId={contact.userId}
             imgSrc={contact.imgSrc}
             name={contact.name}
-            lastMessage={contact.lastMessage}
+            email={contact.email}
             selected={contact.selected}
           />
         ))}

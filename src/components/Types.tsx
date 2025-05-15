@@ -1,8 +1,9 @@
 export interface contactTypes {
-  contactId?: number;
+  contactId?: string;
+  userId: string;
   imgSrc: string;
   name: string;
-  lastMessage: string;
+  email: string;
   selected?: boolean;
 }
 
