@@ -7,7 +7,7 @@ export default function Contacts({
   contactId,
   imgSrc,
   name,
-  lastMessage,
+  email,
   selected,
 }: contactTypes) {
   return (
@@ -28,7 +28,7 @@ export default function Contacts({
       <div className="w-full h-fit flex flex-col text-start">
         <h6 className="font-sans font-normal text-lg text-white">{name}</h6>
         <p className="font-sans font-normal text-xs text-white">
-          {lastMessage} . 32m
+          {email} . 32m
         </p>
       </div>
     </Link>
