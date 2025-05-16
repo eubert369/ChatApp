@@ -1,13 +1,14 @@
 import { useRouter } from "next/router";
-import React from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+// import { contactInfoTypes } from "./Types";
 import { Toaster } from "./ui/sonner";
 
 const layoutExlusionRoutes: string[] = ["/", "/auth/login", "/auth/signup"];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  // const [contactDetails, setContactDetails] = useState<contactInfoTypes>();
   const isLayoutExcluded: boolean = layoutExlusionRoutes.includes(
     router.pathname
   );

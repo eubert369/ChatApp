@@ -91,27 +91,39 @@ export default function ChatMate() {
   }, [context, router]);
 
   useEffect(() => {
-    onSnapshot(
-      query(collection(db, "messages"), where("convoId", "==", id)),
-      (snapshot) => {
-        const filteredSnapshots = snapshot.docChanges().map((message) => {
-          return {
-            message: message.doc.data().messageContent,
-            received:
-              message.doc.data().recipientId == context.currentUserId
-                ? true
-                : false,
-            profilePicUrl:
-              message.doc.data().recipientId == context.currentUserId
-                ? "/img/profile-pic1.png"
-                : context.user.imgUrl,
-          };
-        });
+    const fetchContact = async () => {
+      const req = await fetch(`/api/users/contact/${id}`);
+      const res = await req.json();
+      console.log("current contact:", res);
+    };
 
-        console.log("snapshot:", filteredSnapshots);
-        setChats(filteredSnapshots);
-      }
-    );
+    try {
+      onSnapshot(
+        query(collection(db, "messages"), where("convoId", "==", id)),
+        (snapshot) => {
+          const filteredSnapshots = snapshot.docChanges().map((message) => {
+            return {
+              message: message.doc.data().messageContent,
+              received:
+                message.doc.data().recipientId == context.currentUserId
+                  ? true
+                  : false,
+              profilePicUrl:
+                message.doc.data().recipientId == context.currentUserId
+                  ? "/img/profile-pic1.png"
+                  : context.user.imgUrl,
+            };
+          });
+
+          console.log("snapshot:", filteredSnapshots);
+          setChats(filteredSnapshots);
+        }
+      );
+
+      fetchContact();
+    } catch (error) {
+      console.info(error);
+    }
   }, [id, context.currentUserId, context.user.imgUrl]);
 
   return (

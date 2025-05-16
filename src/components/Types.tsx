@@ -46,3 +46,9 @@ export interface createConvoFormTypes {
   name: string;
   message: string;
 }
+
+export interface contactInfoTypes {
+  userId: string;
+  imgUrl: string;
+  name: string;
+}
