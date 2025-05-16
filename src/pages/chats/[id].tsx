@@ -4,6 +4,8 @@ import { Send } from "lucide-react";
 import ChatItem from "@/components/ChatItem";
 import { Context } from "@/components/ContextProvider";
 import { chatItemTypes } from "@/components/Types";
+import { db } from "@/components/firebase/Config";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 
 const rawChats: chatItemTypes[] = [
   {
@@ -45,6 +47,7 @@ export default function ChatMate() {
   const context = useContext(Context);
   const { id } = router.query;
   const [textareaFocused, setTextareaFocused] = useState<boolean>(false);
+  const [chats, setChats] = useState<chatItemTypes[]>([]);
 
   if (!context) {
     throw new Error("ChildComponent must be used within a ContextProvider");
@@ -87,13 +90,37 @@ export default function ChatMate() {
     }
   }, [context, router]);
 
+  useEffect(() => {
+    onSnapshot(
+      query(collection(db, "messages"), where("convoId", "==", id)),
+      (snapshot) => {
+        const filteredSnapshots = snapshot.docChanges().map((message) => {
+          return {
+            message: message.doc.data().messageContent,
+            received:
+              message.doc.data().recipientId == context.currentUserId
+                ? true
+                : false,
+            profilePicUrl:
+              message.doc.data().recipientId == context.currentUserId
+                ? "/img/profile-pic1.png"
+                : context.user.imgUrl,
+          };
+        });
+
+        console.log("snapshot:", filteredSnapshots);
+        setChats(filteredSnapshots);
+      }
+    );
+  }, [id, context.currentUserId, context.user.imgUrl]);
+
   return (
     <>
       <div className="w-full h-full overflow-y-auto flex flex-col-reverse gap-3">
-        {rawChats.map((chat, chatId) => (
+        {chats.map((chat, chatId) => (
           <ChatItem
             key={chatId}
-            message={`${chat.message} ${id}`}
+            message={chat.message}
             received={chat.received}
             profilePicUrl={chat.profilePicUrl}
           />
