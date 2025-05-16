@@ -7,40 +7,40 @@ import { chatItemTypes } from "@/components/Types";
 import { db } from "@/components/firebase/Config";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 
-const rawChats: chatItemTypes[] = [
-  {
-    message: "Okay",
-    received: false,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-  {
-    message:
-      "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
-    received: true,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-  {
-    message:
-      "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
-    received: false,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-  {
-    message: "The Big brown fox jumps over the lazy dog",
-    received: true,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-  {
-    message: "Hello",
-    received: false,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-  {
-    message: "Hi",
-    received: true,
-    profilePicUrl: "/img/profile-pic1.png",
-  },
-];
+// const rawChats: chatItemTypes[] = [
+//   {
+//     message: "Okay",
+//     received: false,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+//   {
+//     message:
+//       "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
+//     received: true,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+//   {
+//     message:
+//       "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
+//     received: false,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+//   {
+//     message: "The Big brown fox jumps over the lazy dog",
+//     received: true,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+//   {
+//     message: "Hello",
+//     received: false,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+//   {
+//     message: "Hi",
+//     received: true,
+//     profilePicUrl: "/img/profile-pic1.png",
+//   },
+// ];
 
 export default function ChatMate() {
   const router = useRouter();
