@@ -9,8 +9,12 @@ import {
 
 export default function Navbar({
   withSelectedConvo,
+  contactName,
+  imgUrl,
 }: {
   withSelectedConvo?: boolean;
+  contactName?: string;
+  imgUrl?: string;
 }) {
   return (
     <div
@@ -19,10 +23,10 @@ export default function Navbar({
       }`}
     >
       {withSelectedConvo && (
-        <div className="w-fit h-fit flex items-center gap-2">
+        <div className="w-fit h-fit flex items-center gap-3">
           <Image
             className="rounded-full"
-            src={"/img/profile-pic1.png"}
+            src={imgUrl ? imgUrl : "/img/profile-pic1.png"}
             alt="profile pic"
             width={44}
             height={44}
@@ -30,10 +34,10 @@ export default function Navbar({
           />
 
           <div className="w-fit h-fit flex flex-col">
-            <h6 className="font-sans font-medium text-xl">Mokey D. Luffy</h6>
-            <p className="font-sans font-semibold text-xs text-[#008000]">
+            <h6 className="font-sans font-medium text-xl">{contactName}</h6>
+            {/* <p className="font-sans font-semibold text-xs text-[#008000]">
               Online
-            </p>
+            </p> */}
           </div>
         </div>
       )}

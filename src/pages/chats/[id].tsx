@@ -2,45 +2,11 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import ChatItem from "@/components/ChatItem";
+import Navbar from "@/components/Navbar";
 import { Context } from "@/components/ContextProvider";
-import { chatItemTypes } from "@/components/Types";
+import { chatItemTypes, contactInfoTypes } from "@/components/Types";
 import { db } from "@/components/firebase/Config";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
-
-// const rawChats: chatItemTypes[] = [
-//   {
-//     message: "Okay",
-//     received: false,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-//   {
-//     message:
-//       "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
-//     received: true,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-//   {
-//     message:
-//       "The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog. The Big brown fox jumps over the lazy dog.",
-//     received: false,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-//   {
-//     message: "The Big brown fox jumps over the lazy dog",
-//     received: true,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-//   {
-//     message: "Hello",
-//     received: false,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-//   {
-//     message: "Hi",
-//     received: true,
-//     profilePicUrl: "/img/profile-pic1.png",
-//   },
-// ];
 
 export default function ChatMate() {
   const router = useRouter();
@@ -48,6 +14,8 @@ export default function ChatMate() {
   const { id } = router.query;
   const [textareaFocused, setTextareaFocused] = useState<boolean>(false);
   const [chats, setChats] = useState<chatItemTypes[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const [contactInfo, setContactInfo] = useState<contactInfoTypes>();
 
   if (!context) {
     throw new Error("ChildComponent must be used within a ContextProvider");
@@ -93,8 +61,10 @@ export default function ChatMate() {
   useEffect(() => {
     const fetchContact = async () => {
       const req = await fetch(`/api/users/contact/${id}`);
-      const res = await req.json();
-      console.log("current contact:", res);
+      const res = (await req.json()) as contactInfoTypes;
+      console.log("contact:", res);
+
+      setContactInfo(res);
     };
 
     try {
@@ -119,15 +89,44 @@ export default function ChatMate() {
           setChats(filteredSnapshots);
         }
       );
-
       fetchContact();
     } catch (error) {
       console.info(error);
     }
   }, [id, context.currentUserId, context.user.imgUrl]);
 
+  const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const request = await fetch("/api/messages/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          convoId: id,
+          message: message,
+          recipientId: contactInfo?.userId,
+        }),
+      });
+
+      const response = await request.json();
+
+      console.log("send message response", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
+      <Navbar
+        withSelectedConvo={true}
+        contactName={contactInfo?.name}
+        imgUrl={contactInfo?.imgUrl}
+      />
+
       <div className="w-full h-full overflow-y-auto flex flex-col-reverse gap-3">
         {chats.map((chat, chatId) => (
           <ChatItem
@@ -140,7 +139,7 @@ export default function ChatMate() {
       </div>
 
       <form
-        onSubmit={() => alert("test submit")}
+        onSubmit={sendMessage}
         className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
       >
         <textarea
@@ -148,6 +147,7 @@ export default function ChatMate() {
           rows={textareaFocused ? 2 : 1}
           onFocus={() => setTextareaFocused(true)}
           onBlur={() => setTextareaFocused(false)}
+          onKeyUp={(e) => setMessage(e.currentTarget.value)}
           className="w-full h-fit text-[#183B4E] focus:outline-none resize-none"
           placeholder="Aa ..."
         ></textarea>

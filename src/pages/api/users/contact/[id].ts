@@ -29,7 +29,7 @@ export default async function handler(
           res.status(200).json({
             userId: userSnap.id,
             imgUrl: userSnap.data().imgUrl,
-            name: `${userSnap.data().firstName} ${userSnap.data().firstName}`,
+            name: `${userSnap.data().firstName} ${userSnap.data().lastName}`,
           });
         }
       }
