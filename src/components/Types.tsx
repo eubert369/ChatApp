@@ -11,6 +11,7 @@ export interface chatItemTypes {
   message: string;
   received?: boolean;
   profilePicUrl: string;
+  date?: number;
 }
 
 export interface userTypes {
@@ -56,4 +57,6 @@ export interface contactInfoTypes {
 export interface allMessageResponseTypes {
   message: string;
   received: boolean;
+  date: number;
+  profilePicUrl: string;
 }

@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const stringToken = req.cookies.token;
-  const { convoId, recipientId, message } = req.body;
+  const { convoId, recipientId, message, date } = req.body;
   if (req.method == "POST") {
     if (stringToken) {
       const token = JSON.parse(decodeURIComponent(atob(stringToken)));
@@ -18,6 +18,7 @@ export default async function handler(
           messageContent: message,
           recipientId: recipientId,
           senderId: token.id,
+          dateSent: date
         });
 
         res.status(200).json({ message: "Message send successfully" });

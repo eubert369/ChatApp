@@ -18,6 +18,7 @@ export default async function handler(
       const messages = querySnapshot.docs.map((doc) => ({
         message: doc.data().messageContent,
         received: doc.data().recipientId === token.id,
+        date: doc.data().dateSent,
       }));
       res.status(200).json(messages);
     } catch (error) {

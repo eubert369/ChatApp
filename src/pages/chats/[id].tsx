@@ -79,17 +79,21 @@ export default function ChatMate() {
       try {
         const req = await fetch(`/api/messages/${id}`);
         const res = await req.json();
-        setChats(
-          res.map((doc: allMessageResponseTypes) => {
-            return {
-              ...doc,
-              proflePicUrl: doc.received
-                ? "/img/profile-pic1.png"
-                : context.user.imgUrl,
-            };
-          })
+        const mappedMessages = res.map((doc: allMessageResponseTypes) => {
+          return {
+            ...doc,
+            profilePicUrl: doc.received
+              ? contactInfo?.imgUrl
+              : context.user.imgUrl,
+          };
+        });
+        const sortedMessages = mappedMessages.sort(
+          (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
+            b.date > a.date
         );
-        console.log("all messages response:", res);
+
+        console.log("all messages response:", sortedMessages);
+        setChats(sortedMessages);
       } catch (error) {
         console.error(error);
       }
@@ -98,25 +102,8 @@ export default function ChatMate() {
     try {
       onSnapshot(
         query(collection(db, "messages"), where("convoId", "==", id)),
-        (snapshot) => {
-          const filteredSnapshots = snapshot.docChanges().map((message) => {
-            return {
-              message: message.doc.data().messageContent,
-              received:
-                message.doc.data().recipientId == context.currentUserId
-                  ? true
-                  : false,
-              profilePicUrl:
-                message.doc.data().recipientId == context.currentUserId
-                  ? "/img/profile-pic1.png"
-                  : context.user.imgUrl,
-            };
-          });
-
+        () => {
           fetchAllMessages();
-
-          console.log("snapshot:", filteredSnapshots);
-          // setChats(filteredSnapshots);
         }
       );
       fetchContact();
@@ -138,12 +125,14 @@ export default function ChatMate() {
           convoId: id,
           message: message,
           recipientId: contactInfo?.userId,
+          date: new Date().getTime(),
         }),
       });
 
       const response = await request.json();
 
       console.log("send message response", response);
+      setMessage("");
     } catch (error) {
       console.error(error);
     }
@@ -175,13 +164,15 @@ export default function ChatMate() {
         <textarea
           id="#"
           rows={textareaFocused ? 2 : 1}
+          value={message}
+          onChange={(e) => setMessage(e.currentTarget.value)}
           onFocus={() => setTextareaFocused(true)}
           onBlur={() => setTextareaFocused(false)}
           onKeyUp={(e) => setMessage(e.currentTarget.value)}
           className="w-full h-fit text-[#183B4E] focus:outline-none resize-none"
           placeholder="Aa ..."
         ></textarea>
-        <button type="submit" className="w-fit h-fit">
+        <button type="submit" className="w-fit h-fit cursor-pointer">
           <Send className="w-6 h-6 text-[#183B4E]" />
         </button>
       </form>
