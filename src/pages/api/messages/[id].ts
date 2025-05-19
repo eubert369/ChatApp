@@ -1,0 +1,29 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { db } from "@/components/firebase/Config";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const stringToken = req.cookies.token;
+  if (stringToken) {
+    const token = JSON.parse(decodeURIComponent(atob(stringToken)));
+    try {
+      const { id } = req.query;
+      const querySnapshot = await getDocs(
+        query(collection(db, "messages"), where("convoId", "==", id))
+      );
+
+      const messages = querySnapshot.docs.map((doc) => ({
+        message: doc.data().messageContent,
+        received: doc.data().recipientId === token.id,
+      }));
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", err: error });
+    }
+  } else {
+    res.status(403).json({ message: "Unauthorized Access" });
+  }
+}

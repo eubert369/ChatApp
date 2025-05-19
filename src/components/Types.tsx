@@ -52,3 +52,8 @@ export interface contactInfoTypes {
   imgUrl: string;
   name: string;
 }
+
+export interface allMessageResponseTypes {
+  message: string;
+  received: boolean;
+}

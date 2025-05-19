@@ -4,7 +4,11 @@ import { Send } from "lucide-react";
 import ChatItem from "@/components/ChatItem";
 import Navbar from "@/components/Navbar";
 import { Context } from "@/components/ContextProvider";
-import { chatItemTypes, contactInfoTypes } from "@/components/Types";
+import {
+  chatItemTypes,
+  contactInfoTypes,
+  allMessageResponseTypes,
+} from "@/components/Types";
 import { db } from "@/components/firebase/Config";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 
@@ -60,11 +64,35 @@ export default function ChatMate() {
 
   useEffect(() => {
     const fetchContact = async () => {
-      const req = await fetch(`/api/users/contact/${id}`);
-      const res = (await req.json()) as contactInfoTypes;
-      console.log("contact:", res);
+      try {
+        const req = await fetch(`/api/users/contact/${id}`);
+        const res = (await req.json()) as contactInfoTypes;
+        console.log("contact:", res);
 
-      setContactInfo(res);
+        setContactInfo(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchAllMessages = async () => {
+      try {
+        const req = await fetch(`/api/messages/${id}`);
+        const res = await req.json();
+        setChats(
+          res.map((doc: allMessageResponseTypes) => {
+            return {
+              ...doc,
+              proflePicUrl: doc.received
+                ? "/img/profile-pic1.png"
+                : context.user.imgUrl,
+            };
+          })
+        );
+        console.log("all messages response:", res);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     try {
@@ -85,15 +113,17 @@ export default function ChatMate() {
             };
           });
 
+          fetchAllMessages();
+
           console.log("snapshot:", filteredSnapshots);
-          setChats(filteredSnapshots);
+          // setChats(filteredSnapshots);
         }
       );
       fetchContact();
     } catch (error) {
       console.info(error);
     }
-  }, [id, context.currentUserId, context.user.imgUrl]);
+  }, [id, context.currentUserId, context.user.imgUrl, contactInfo?.imgUrl]);
 
   const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
