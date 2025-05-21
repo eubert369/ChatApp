@@ -11,7 +11,7 @@ export interface chatItemTypes {
   message: string;
   received?: boolean;
   profilePicUrl: string;
-  date?: number;
+  date?: string;
 }
 
 export interface userTypes {

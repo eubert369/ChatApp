@@ -82,14 +82,12 @@ export default function ChatMate() {
         const mappedMessages = res.map((doc: allMessageResponseTypes) => {
           return {
             ...doc,
-            profilePicUrl: doc.received
-              ? contactInfo?.imgUrl
-              : context.user.imgUrl,
+            profilePicUrl: contactInfo?.imgUrl,
           };
         });
         const sortedMessages = mappedMessages.sort(
           (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
-            b.date > a.date
+            new Date(b.date).getTime() > new Date(a.date).getTime()
         );
 
         console.log("all messages response:", sortedMessages);
@@ -112,9 +110,7 @@ export default function ChatMate() {
     }
   }, [id, context.currentUserId, context.user.imgUrl, contactInfo?.imgUrl]);
 
-  const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const sendMessage = async () => {
     try {
       const request = await fetch("/api/messages/chat", {
         method: "POST",
@@ -125,7 +121,7 @@ export default function ChatMate() {
           convoId: id,
           message: message,
           recipientId: contactInfo?.userId,
-          date: new Date().getTime(),
+          date: `${new Date()}`,
         }),
       });
 
@@ -152,13 +148,13 @@ export default function ChatMate() {
             key={chatId}
             message={chat.message}
             received={chat.received}
-            profilePicUrl={chat.profilePicUrl}
+            profilePicUrl={`${contactInfo?.imgUrl}`}
           />
         ))}
       </div>
 
       <form
-        onSubmit={sendMessage}
+        onSubmit={() => sendMessage()}
         className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
       >
         <textarea
@@ -168,7 +164,13 @@ export default function ChatMate() {
           onChange={(e) => setMessage(e.currentTarget.value)}
           onFocus={() => setTextareaFocused(true)}
           onBlur={() => setTextareaFocused(false)}
-          onKeyUp={(e) => setMessage(e.currentTarget.value)}
+          onKeyUp={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage();
+            }
+            setMessage(e.currentTarget.value);
+          }}
           className="w-full h-fit text-[#183B4E] focus:outline-none resize-none"
           placeholder="Aa ..."
         ></textarea>
