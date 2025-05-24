@@ -8,7 +8,12 @@ import {
   MessageSquarePlus,
 } from "lucide-react";
 import Contacts from "./Contacts";
-import { contactTypes, userTypes } from "./Types";
+import {
+  contactTypes,
+  userTypes,
+  userSearchTypes,
+  createConvoFormTypes,
+} from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Dialog,
@@ -22,34 +27,8 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
-import { userSearchTypes, createConvoFormTypes } from "./Types";
 import { db } from "./firebase/Config";
 import { onSnapshot, collection, doc, getDoc } from "firebase/firestore";
-
-// const listOfContactTypes: contactTypes[] = [
-//   {
-//     imgSrc: "/img/profile-pic1.png",
-//     name: "Monkey D. Luffy",
-//     email: "Luffy: Hey",
-//     selected: true,
-//   },
-//   {
-//     imgSrc: "/img/profile-pic2.png",
-//     name: "Roronoa Zoro",
-//     email: "Zoro: Hey",
-//   },
-//   {
-//     imgSrc: "/img/profile-pic4.png",
-//     name: "Vinsmoke Sanji",
-//     email: "Nami: Hey",
-//   },
-
-//   {
-//     imgSrc: "/img/profile-pic3.png",
-//     name: "Catburglar Nami",
-//     email: "Sanji: Hey",
-//   },
-// ];
 
 export default function Sidebar() {
   const router = useRouter();
@@ -113,6 +92,7 @@ export default function Sidebar() {
 
           if (user.exists()) {
             return {
+              contactId: snap.doc.id,
               userId: user.id,
               name: `${user.data().firstName} ${user.data().lastName}`,
               imgSrc: `${user.data().imgUrl}`,
@@ -625,12 +605,12 @@ export default function Sidebar() {
         {listOfContacts.map((contact, mapID) => (
           <Contacts
             key={mapID}
-            contactId={contact.userId}
+            contactId={contact.contactId}
             userId={contact.userId}
             imgSrc={contact.imgSrc}
             name={contact.name}
             email={contact.email}
-            selected={!!id && id == contact.userId}
+            selected={!!id && id == contact.contactId}
           />
         ))}
       </div>

@@ -11,6 +11,7 @@ export interface chatItemTypes {
   message: string;
   received?: boolean;
   profilePicUrl: string;
+  date?: string;
 }
 
 export interface userTypes {
@@ -45,4 +46,17 @@ export interface createConvoFormTypes {
   recipientId: string;
   name: string;
   message: string;
+}
+
+export interface contactInfoTypes {
+  userId: string;
+  imgUrl: string;
+  name: string;
+}
+
+export interface allMessageResponseTypes {
+  message: string;
+  received: boolean;
+  date: number;
+  profilePicUrl: string;
 }
