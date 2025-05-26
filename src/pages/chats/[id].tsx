@@ -76,6 +76,8 @@ export default function ChatMate() {
     };
 
     const fetchAllMessages = async () => {
+      console.log("current convo ID:", id);
+
       try {
         const req = await fetch(`/api/messages/${id}`);
         const res = await req.json();
@@ -87,7 +89,7 @@ export default function ChatMate() {
         });
         const sortedMessages = mappedMessages.sort(
           (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
-            new Date(b.date).getTime() > new Date(a.date).getTime()
+            new Date(b.date).getTime() - new Date(a.date).getTime()
         );
 
         console.log("all messages response:", sortedMessages);
@@ -101,6 +103,12 @@ export default function ChatMate() {
       onSnapshot(
         query(collection(db, "messages"), where("convoId", "==", id)),
         () => {
+          // console.log(
+          //   snapshot.docs.forEach((doc) => {
+          //     console.log("current snapshot data:", doc.data().convoId);
+          //   })
+          // );
+
           fetchAllMessages();
         }
       );
@@ -154,7 +162,10 @@ export default function ChatMate() {
       </div>
 
       <form
-        onSubmit={() => sendMessage()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
         className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
       >
         <textarea
