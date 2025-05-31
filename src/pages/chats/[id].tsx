@@ -63,6 +63,8 @@ export default function ChatMate() {
   }, [context, router]);
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     const fetchContact = async () => {
       try {
         const req = await fetch(`/api/users/contact/${id}`);
@@ -76,47 +78,48 @@ export default function ChatMate() {
     };
 
     const fetchAllMessages = async () => {
-      console.log("current convo ID:", id);
-
       try {
         const req = await fetch(`/api/messages/${id}`);
-        const res = await req.json();
-        const mappedMessages = res.map((doc: allMessageResponseTypes) => {
-          return {
-            ...doc,
-            profilePicUrl: contactInfo?.imgUrl,
-          };
-        });
-        const sortedMessages = mappedMessages.sort(
-          (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
+        if (req.status === 200) {
+          const res = await req.json();
+          const mappedMessages = res.map((doc: allMessageResponseTypes) => {
+            return {
+              ...doc,
+              profilePicUrl: contactInfo?.imgUrl,
+            };
+          });
+          const sortedMessages = mappedMessages.sort(
+            (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
 
-        console.log("all messages response:", sortedMessages);
-        setChats(sortedMessages);
+          console.log("all messages response:", sortedMessages);
+          setChats(sortedMessages);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     try {
-      onSnapshot(
+      const unsubscribe = onSnapshot(
         query(collection(db, "messages"), where("convoId", "==", id)),
         () => {
-          // console.log(
-          //   snapshot.docs.forEach((doc) => {
-          //     console.log("current snapshot data:", doc.data().convoId);
-          //   })
-          // );
-
+          fetchContact();
           fetchAllMessages();
         }
       );
-      fetchContact();
+      return () => unsubscribe();
     } catch (error) {
       console.info(error);
     }
-  }, [id, context.currentUserId, context.user.imgUrl, contactInfo?.imgUrl]);
+  }, [
+    id,
+    context.currentUserId,
+    context.user.imgUrl,
+    contactInfo?.imgUrl,
+    router.isReady,
+  ]);
 
   const sendMessage = async () => {
     try {
