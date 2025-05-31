@@ -25,6 +25,7 @@ export default function ChatMate() {
     throw new Error("ChildComponent must be used within a ContextProvider");
   }
 
+
   useEffect(() => {
     const validateUser = async () => {
       try {
@@ -63,6 +64,8 @@ export default function ChatMate() {
   }, [context, router]);
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     const fetchContact = async () => {
       try {
         const req = await fetch(`/api/users/contact/${id}`);
@@ -78,37 +81,46 @@ export default function ChatMate() {
     const fetchAllMessages = async () => {
       try {
         const req = await fetch(`/api/messages/${id}`);
-        const res = await req.json();
-        const mappedMessages = res.map((doc: allMessageResponseTypes) => {
-          return {
-            ...doc,
-            profilePicUrl: contactInfo?.imgUrl,
-          };
-        });
-        const sortedMessages = mappedMessages.sort(
-          (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
-            new Date(b.date).getTime() > new Date(a.date).getTime()
-        );
+        if (req.status === 200) {
+          const res = await req.json();
+          const mappedMessages = res.map((doc: allMessageResponseTypes) => {
+            return {
+              ...doc,
+              profilePicUrl: contactInfo?.imgUrl,
+            };
+          });
+          const sortedMessages = mappedMessages.sort(
+            (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
 
-        console.log("all messages response:", sortedMessages);
-        setChats(sortedMessages);
+          console.log("all messages response:", sortedMessages);
+          setChats(sortedMessages);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     try {
-      onSnapshot(
+      const unsubscribe = onSnapshot(
         query(collection(db, "messages"), where("convoId", "==", id)),
         () => {
           fetchAllMessages();
         }
       );
       fetchContact();
+      return () => unsubscribe();
     } catch (error) {
       console.info(error);
     }
-  }, [id, context.currentUserId, context.user.imgUrl, contactInfo?.imgUrl]);
+  }, [
+    id,
+    context.currentUserId,
+    context.user.imgUrl,
+    contactInfo?.imgUrl,
+    router.isReady,
+  ]);
 
   const sendMessage = async () => {
     try {
@@ -154,7 +166,10 @@ export default function ChatMate() {
       </div>
 
       <form
-        onSubmit={() => sendMessage()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
         className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
       >
         <textarea
