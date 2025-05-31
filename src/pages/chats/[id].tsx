@@ -25,6 +25,7 @@ export default function ChatMate() {
     throw new Error("ChildComponent must be used within a ContextProvider");
   }
 
+
   useEffect(() => {
     const validateUser = async () => {
       try {
@@ -105,10 +106,10 @@ export default function ChatMate() {
       const unsubscribe = onSnapshot(
         query(collection(db, "messages"), where("convoId", "==", id)),
         () => {
-          fetchContact();
           fetchAllMessages();
         }
       );
+      fetchContact();
       return () => unsubscribe();
     } catch (error) {
       console.info(error);
