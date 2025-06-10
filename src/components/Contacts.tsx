@@ -7,8 +7,9 @@ export default function Contacts({
   contactId,
   imgSrc,
   name,
-  email,
+  latestMessage,
   selected,
+  timestamp
 }: contactTypes) {
   return (
     <Link
@@ -28,7 +29,7 @@ export default function Contacts({
       <div className="w-full h-fit flex flex-col text-start">
         <h6 className="font-sans font-normal text-lg text-white">{name}</h6>
         <p className="font-sans font-normal text-xs text-white">
-          {email} . 32m
+          {latestMessage} . {timestamp} . 32m
         </p>
       </div>
     </Link>

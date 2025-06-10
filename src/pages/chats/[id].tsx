@@ -89,13 +89,8 @@ export default function ChatMate() {
               profilePicUrl: contactInfo?.imgUrl,
             };
           });
-          const sortedMessages = mappedMessages.sort(
-            (a: allMessageResponseTypes, b: allMessageResponseTypes) =>
-              new Date(b.date).getTime() - new Date(a.date).getTime()
-          );
-
-          console.log("all messages response:", sortedMessages);
-          setChats(sortedMessages);
+          
+          setChats(mappedMessages);
         }
       } catch (error) {
         console.error(error);
@@ -133,7 +128,6 @@ export default function ChatMate() {
           convoId: id,
           message: message,
           recipientId: contactInfo?.userId,
-          date: `${new Date()}`,
         }),
       });
 

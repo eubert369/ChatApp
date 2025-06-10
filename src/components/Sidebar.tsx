@@ -13,6 +13,7 @@ import {
   userTypes,
   userSearchTypes,
   createConvoFormTypes,
+  requestedContactTypes,
 } from "./Types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
@@ -28,7 +29,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { Context } from "./ContextProvider";
 import { db } from "./firebase/Config";
-import { onSnapshot, collection, doc, getDoc } from "firebase/firestore";
+import { onSnapshot, collection } from "firebase/firestore";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -70,48 +71,35 @@ export default function Sidebar() {
   }, [context]);
 
   useEffect(() => {
-    onSnapshot(collection(db, "conversations"), async (snapshot) => {
-      console.info("New Snapshot");
-      const filteredSnapshot = snapshot
-        .docChanges()
-        .filter(
-          (data) =>
-            data.doc.data().user1 == context?.currentUserId ||
-            data.doc.data().user2 == context?.currentUserId
-        );
-      const convoData = await Promise.all(
-        filteredSnapshot.map(async (snap) => {
-          const docRef = doc(
-            db,
-            "users",
-            snap.doc.data().user1 == context?.currentUserId
-              ? snap.doc.data().user2
-              : snap.doc.data().user1
-          );
-          const user = await getDoc(docRef);
+    const fetchContacts = async () => {
+      const request = await fetch("/api/contacts");
+      const response = await request.json();
 
-          if (user.exists()) {
-            return {
-              contactId: snap.doc.id,
-              userId: user.id,
-              name: `${user.data().firstName} ${user.data().lastName}`,
-              imgSrc: `${user.data().imgUrl}`,
-              email: `${user.data().email}`,
-              selected: false,
-            };
-          }
+      console.log("initial conta.ct fetching response:", response);
+      const sortMappedContacts = response.contacts
+        .map((item: requestedContactTypes) => {
+          return {
+            contactId: item.convoId,
+            userId: item.userId,
+            imgSrc: item.imgSrc,
+            name: item.name,
+            latestMessage: item.latestMessage,
+            timestamp: item.timestamp,
+          };
         })
-      );
+        .sort(
+          (a: requestedContactTypes, b: requestedContactTypes) =>
+            new Date(a.timestamp) < new Date(b.timestamp)
+        );
 
-      console.log("covo users:", convoData);
-      const filteredConvoData = convoData.filter(
-        (user) => user !== undefined
-      ) as contactTypes[];
-      setListOfContacts((previosData) => [
-        ...previosData,
-        ...filteredConvoData,
-      ]);
+      setListOfContacts(sortMappedContacts);
+    };
+    
+    const unsubscribe = onSnapshot(collection(db, "messages"), () => {
+      fetchContacts();
     });
+
+    return () => unsubscribe();
   }, [context?.currentUserId]);
 
   const logout = async () => {
@@ -609,7 +597,8 @@ export default function Sidebar() {
             userId={contact.userId}
             imgSrc={contact.imgSrc}
             name={contact.name}
-            email={contact.email}
+            latestMessage={contact.latestMessage}
+            timestamp={contact.timestamp}
             selected={!!id && id == contact.contactId}
           />
         ))}

@@ -26,7 +26,7 @@ export default function Navbar({
         <div className="w-fit h-fit flex items-center gap-3">
           <Image
             className="rounded-full"
-            src={imgUrl ? imgUrl : "/img/profile-pic1.png"}
+            src={imgUrl !== undefined ? imgUrl : "/img/profile-pic1.png"}
             alt="profile pic"
             width={44}
             height={44}
