@@ -76,7 +76,7 @@ export default function Sidebar() {
       const request = await fetch("/api/contacts");
       const response = await request.json();
 
-      console.log("initial conta.ct fetching response:", response);
+      console.log("initial contact fetching response:", response);
       const sortMappedContacts = response.contacts
         .map((item: requestedContactTypes) => {
           return {
@@ -235,7 +235,6 @@ export default function Sidebar() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // senderId: context?.currentUserId,
           recipientId: createConvoForm.recipientId,
           message: createConvoForm.message,
         }),
@@ -270,142 +269,6 @@ export default function Sidebar() {
               <EllipsisVertical className="w-6 h-6 text-white hover:scale-125 transition-all duration-200" />
             </PopoverTrigger>
             <PopoverContent className="bg-[#F5EEDC] w-fit h-fit p-0 flex flex-col gap-1 py-2 border border-[#183B4E]">
-              {/* <Dialog>
-                <DialogTrigger asChild>
-                  <button className="px-3 py-1 flex gap-2 items-center font-sans font-medium text-start cursor-pointer text-[#183B4E] hover:bg-gray-600/15">
-                    <SquarePen className="w-4 h-4" />
-                    Start New Conversation
-                  </button>
-                </DialogTrigger>
-                <DialogContent
-                  showCloseButton={false}
-                  className="w-full bg-[#F5EEDC] text-[#183B4E]"
-                >
-                  <DialogHeader className="border-b border-[#183B4E]/30 pb-2">
-                    <DialogTitle>Start Conversation</DialogTitle>
-                    <DialogDescription>
-                      Connect with people to initiate your conversation.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form
-                    onSubmit={handleStartConvoSubmit}
-                    className="w-full h-fit flex flex-col gap-3"
-                  >
-                    <div className="w-full h-fit inline-flex flex-col gap-1 relative">
-                      <label htmlFor="nameEmail">Name/Email</label>
-                      <input
-                        id="nameEmail"
-                        type="text"
-                        onChange={(e) => {
-                          setUserSearchMatched(false);
-                          setOpenUserSearch(e.currentTarget.value.length > 0);
-                          handleUserSearch(e.currentTarget.value);
-                          setCreateConvoForm({
-                            ...createConvoForm,
-                            name: e.currentTarget.value,
-                          });
-
-                          if (e.currentTarget.value.length === 0) {
-                            setCreateConvoForm({
-                              ...createConvoForm,
-                              recipientId: "",
-                            });
-                          }
-                        }}
-                        onFocus={(e) =>
-                          setOpenUserSearch(e.target.value.length > 0)
-                        }
-                        value={createConvoForm.name}
-                        // onBlur={() => setOpenUserSearch(false)}
-                        autoComplete="off"
-                        placeholder="Start typing names or emails"
-                        className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
-                      />
-                      {openUserSearch && (
-                        <div className="absolute end-0 top-16 z-auto w-full h-fit max-h-44 overflow-y-auto bg-[#F5EEDC] border shadow-md rounded-md flex flex-col gap-1">
-                          {searchedUsers.length > 0 ? (
-                            searchedUsers.map((user, id) => (
-                              <button
-                                key={id}
-                                type="button"
-                                onClick={() => {
-                                  console.log("user ID:", user.id);
-                                  setUserSearchMatched(false);
-                                  setOpenUserSearch(false);
-                                  setCreateConvoForm({
-                                    ...createConvoForm,
-                                    recipientId: user.id,
-                                    name: user.name,
-                                  });
-                                }}
-                                className="w-full h-fit p-3 flex items-center gap-3 cursor-pointer hover:bg-black/10"
-                              >
-                                <Image
-                                  alt="img-icon"
-                                  width={40}
-                                  height={40}
-                                  src={
-                                    user.imgUrl.length > 0
-                                      ? user.imgUrl
-                                      : "/icons/user-filler-icon.svg"
-                                  }
-                                  className="rounded-full"
-                                />
-                                <div className="w-full h-fit flex flex-col">
-                                  <h5 className="text-base text-[#183B4E] text-start font-medium">
-                                    {user.name}
-                                  </h5>
-                                  <p className="text-xs text-muted-foreground text-start font-normal">
-                                    {user.email}
-                                  </p>
-                                </div>
-                              </button>
-                            ))
-                          ) : (
-                            <span className="text-[#183B4E] text-center">
-                              {userSearchMatched
-                                ? "No user found"
-                                : "Searching ..."}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="w-full h-fit flex flex-col gap-1">
-                      <label htmlFor="message">Message</label>
-                      <textarea
-                        id="message"
-                        rows={4}
-                        placeholder="Type your message..."
-                        onKeyUp={(e) => {
-                          setCreateConvoForm({
-                            ...createConvoForm,
-                            message: e.currentTarget.value,
-                          });
-                        }}
-                        className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
-                      ></textarea>
-                    </div>
-
-                    <div className="w-full h-fit flex items-center justify-end gap-2">
-                      <DialogClose
-                        ref={closeCreateMessageDialog}
-                        className="w-fit h-fit px-3 py-1 cursor-pointer hover:underline hover:scale-105 transition-all duration-100"
-                      >
-                        Cancel
-                      </DialogClose>
-                      <button
-                        type="submit"
-                        className="w-fit h-fit px-3 py-1 bg-[#183B4E] text-white rounded-md cursor-pointer hover:scale-105 transition-all duration-100"
-                      >
-                        Create
-                      </button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog> */}
-
               <Dialog>
                 <DialogTrigger asChild>
                   <button
@@ -611,7 +474,7 @@ export default function Sidebar() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="bg-white rounded-full p-3 cursor-pointer hover:scale-110"
+                  className="bg-white rounded-full p-3 cursor-pointer shadow-lg hover:scale-110"
                 >
                   <SquarePen className="text-[#183B4E] w-4 h-4" />
                 </button>
@@ -638,7 +501,7 @@ export default function Sidebar() {
                 <input
                   id="nameEmail"
                   type="text"
-                  onChange={(e) => {
+                  onKeyUp={(e) => {
                     setUserSearchMatched(false);
                     setOpenUserSearch(e.currentTarget.value.length > 0);
                     handleUserSearch(e.currentTarget.value);
@@ -655,8 +518,6 @@ export default function Sidebar() {
                     }
                   }}
                   onFocus={(e) => setOpenUserSearch(e.target.value.length > 0)}
-                  value={createConvoForm.name}
-                  // onBlur={() => setOpenUserSearch(false)}
                   autoComplete="off"
                   placeholder="Start typing names or emails"
                   className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"
