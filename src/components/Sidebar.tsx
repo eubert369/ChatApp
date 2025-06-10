@@ -246,7 +246,7 @@ export default function Sidebar() {
         if (closeCreateMessageDialog.current) {
           closeCreateMessageDialog.current.click();
         }
-        toast.success("Submit Clicked", { id: loadingID });
+        toast.success("Message Sent", { id: loadingID });
         router.push(`/chats/${res.convoId}`);
       } else if (req.status === 409) {
         toast.warning(`${res.message} with ${createConvoForm.name}`, {
@@ -517,7 +517,24 @@ export default function Sidebar() {
                       });
                     }
                   }}
+                  onChange={(e) => {
+                    setUserSearchMatched(false);
+                    setOpenUserSearch(e.currentTarget.value.length > 0);
+                    handleUserSearch(e.currentTarget.value);
+                    setCreateConvoForm({
+                      ...createConvoForm,
+                      name: e.currentTarget.value,
+                    });
+
+                    if (e.currentTarget.value.length === 0) {
+                      setCreateConvoForm({
+                        ...createConvoForm,
+                        recipientId: "",
+                      });
+                    }
+                  }}
                   onFocus={(e) => setOpenUserSearch(e.target.value.length > 0)}
+                  value={createConvoForm.name}
                   autoComplete="off"
                   placeholder="Start typing names or emails"
                   className="w-full h-fit px-2 py-1 rounded-md border border-[#183B4E]/50 focus:outline-none focus:border-[#183B4E]/50 text-[#183B4E]"

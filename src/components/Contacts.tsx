@@ -31,14 +31,14 @@ export default function Contacts({
       <div className="w-full h-fit flex flex-col text-start">
         <h6 className="font-sans font-normal text-lg text-white">{name}</h6>
         <div className="w-full h-fit flex items-center justify-start">
-          <p className="font-sans font-normal text-xs text-white">
+          <p className="font-sans font-normal text-xs text-white whitespace-nowrap">
             {latestMessage.length > 24
               ? `${latestMessage.substring(0, 24)}...`
               : latestMessage}{" "}
           </p>
           <div className="w-fit h-fit flex gap-[2px] items-center">
             <Dot className="text-xs w-4 h-4" />
-            <span className="font-sans font-normal text-xs text-white">
+            <span className="font-sans font-normal text-xs text-white whitespace-nowrap">
               {moment(new Date(timestamp)).fromNow()}
             </span>
           </div>

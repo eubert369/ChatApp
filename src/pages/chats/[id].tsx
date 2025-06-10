@@ -89,7 +89,7 @@ export default function ChatMate() {
               profilePicUrl: contactInfo?.imgUrl,
             };
           });
-          
+
           setChats(mappedMessages);
         }
       } catch (error) {
@@ -154,7 +154,7 @@ export default function ChatMate() {
             key={chatId}
             message={chat.message}
             received={chat.received}
-            profilePicUrl={`${contactInfo?.imgUrl}`}
+            profilePicUrl={contactInfo?.imgUrl !== undefined ? contactInfo?.imgUrl : "/img/profile-pic1.png"}
           />
         ))}
       </div>
