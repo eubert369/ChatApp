@@ -56,14 +56,20 @@ export default async function handler(
                 convoId: convo.id,
                 userId: docSnap.id,
                 name: `${docSnap.data().firstName} ${docSnap.data().lastName}`,
-                conversation: latestMessage.docs[0].data(),
+                imgSrc: docSnap.data().imgUrl,
+                latestMessage: `${
+                  latestMessage.docs[0].data().senderId == docSnap.id
+                    ? docSnap.data().firstName
+                    : "You"
+                }: ${latestMessage.docs[0].data().messageContent}`,
+                timestamp: latestMessage.docs[0].data().dateSent.toDate(),
               };
             }
           })
         );
 
         res.status(200).json({
-          initialFetch: contactsFetched,
+          contacts: contactsFetched,
           message: "success",
         });
       } else {
@@ -72,7 +78,7 @@ export default async function handler(
         });
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
       res.status(500).json({ message: "Server Error", err: error });
     }
     // res.status(200).json({ name: "John Doe" });

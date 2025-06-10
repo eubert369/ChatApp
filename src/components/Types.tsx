@@ -3,7 +3,8 @@ export interface contactTypes {
   userId: string;
   imgSrc: string;
   name: string;
-  email: string;
+  latestMessage: string;
+  timestamp: string;
   selected?: boolean;
 }
 
@@ -59,4 +60,13 @@ export interface allMessageResponseTypes {
   received: boolean;
   date: number;
   profilePicUrl: string;
+}
+
+export interface requestedContactTypes {
+  convoId: string,
+  userId: string,
+  name: string,
+  imgSrc: string,
+  latestMessage: string,
+  timestamp: string,
 }
