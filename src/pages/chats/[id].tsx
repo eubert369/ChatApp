@@ -170,7 +170,6 @@ export default function ChatMate() {
           id="#"
           rows={textareaFocused ? 2 : 1}
           value={message}
-          onChange={(e) => setMessage(e.currentTarget.value)}
           onFocus={() => setTextareaFocused(true)}
           onBlur={() => setTextareaFocused(false)}
           onKeyUp={(e) => {

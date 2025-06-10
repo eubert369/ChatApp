@@ -501,34 +501,19 @@ export default function Sidebar() {
                 <input
                   id="nameEmail"
                   type="text"
-                  onKeyUp={(e) => {
-                    setUserSearchMatched(false);
-                    setOpenUserSearch(e.currentTarget.value.length > 0);
-                    handleUserSearch(e.currentTarget.value);
-                    setCreateConvoForm({
-                      ...createConvoForm,
-                      name: e.currentTarget.value,
-                    });
-
-                    if (e.currentTarget.value.length === 0) {
-                      setCreateConvoForm({
-                        ...createConvoForm,
-                        recipientId: "",
-                      });
-                    }
-                  }}
                   onChange={(e) => {
                     setUserSearchMatched(false);
-                    setOpenUserSearch(e.currentTarget.value.length > 0);
-                    handleUserSearch(e.currentTarget.value);
+                    setOpenUserSearch(e.target.value.length > 0);
+                    handleUserSearch(e.target.value);
                     setCreateConvoForm({
                       ...createConvoForm,
-                      name: e.currentTarget.value,
+                      name: e.target.value,
                     });
 
-                    if (e.currentTarget.value.length === 0) {
+                    if (e.target.value.length === 0) {
                       setCreateConvoForm({
                         ...createConvoForm,
+                        name: e.target.value,
                         recipientId: "",
                       });
                     }
