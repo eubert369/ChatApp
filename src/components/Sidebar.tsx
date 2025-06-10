@@ -70,6 +70,14 @@ export default function Sidebar() {
   }, [context]);
 
   useEffect(() => {
+    const fetchContacts = async () => {
+      const request = await fetch("/api/contacts");
+      const response = await request.json();
+      console.log("initial contact fetching response:", response);
+    };
+
+    fetchContacts();
+
     onSnapshot(collection(db, "conversations"), async (snapshot) => {
       console.info("New Snapshot");
       const filteredSnapshot = snapshot
@@ -79,6 +87,7 @@ export default function Sidebar() {
             data.doc.data().user1 == context?.currentUserId ||
             data.doc.data().user2 == context?.currentUserId
         );
+
       const convoData = await Promise.all(
         filteredSnapshot.map(async (snap) => {
           const docRef = doc(

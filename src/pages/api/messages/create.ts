@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/components/firebase/Config";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, Timestamp } from "firebase/firestore";
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,6 +44,7 @@ export default async function handler(
             senderId: `${token.id}`,
             recipientId: `${recipientId}`,
             messageContent: message,
+            dateSent: Timestamp.now()
           });
 
           res

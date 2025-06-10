@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/components/firebase/Config";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,11 @@ export default async function handler(
     try {
       const { id } = req.query;
       const querySnapshot = await getDocs(
-        query(collection(db, "messages"), where("convoId", "==", id))
+        query(
+          collection(db, "messages"),
+          where("convoId", "==", id),
+          orderBy("dateSent", "desc")
+        )
       );
 
       const messages = querySnapshot.docs.map((doc) => ({
@@ -22,6 +26,7 @@ export default async function handler(
       }));
       res.status(200).json(messages);
     } catch (error) {
+      console.error(error)
       res.status(500).json({ message: "Server error", err: error });
     }
   } else {
