@@ -25,6 +25,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "./ui/dialog";
+import LoadingContacts from "./LoadingContacts";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
@@ -45,6 +46,7 @@ export default function Sidebar() {
   const [imgUrl, setImgUrl] = useState<string>("/icons/user-filler-icon.svg");
   const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
   const [userSearchMatched, setUserSearchMatched] = useState<boolean>(false);
+  const [contactsLoading, setContactsLoading] = useState<boolean>(true);
   const [searchedUsers, setSearchedUsers] = useState<userSearchTypes[]>([]);
   const [createConvoForm, setCreateConvoForm] = useState<createConvoFormTypes>({
     name: "",
@@ -76,27 +78,31 @@ export default function Sidebar() {
       const request = await fetch("/api/contacts");
       const response = await request.json();
 
-      console.log("initial contact fetching response:", response);
-      const sortMappedContacts = response.contacts
-        .map((item: requestedContactTypes) => {
-          return {
-            contactId: item.convoId,
-            userId: item.userId,
-            imgSrc: item.imgSrc,
-            name: item.name,
-            latestMessage: item.latestMessage,
-            timestamp: item.timestamp,
-          };
-        })
-        .sort(
-          (a: requestedContactTypes, b: requestedContactTypes) =>
-            new Date(a.timestamp) < new Date(b.timestamp)
-        );
+      // console.log("initial contact fetching response:", response);
+      if (response.contacts !== undefined) {
+        const sortMappedContacts = response.contacts
+          .map((item: requestedContactTypes) => {
+            return {
+              contactId: item.convoId,
+              userId: item.userId,
+              imgSrc: item.imgSrc,
+              name: item.name,
+              latestMessage: item.latestMessage,
+              timestamp: item.timestamp,
+            };
+          })
+          .sort(
+            (a: requestedContactTypes, b: requestedContactTypes) =>
+              new Date(a.timestamp) < new Date(b.timestamp)
+          );
 
-      setListOfContacts(sortMappedContacts);
+        setListOfContacts(sortMappedContacts);
+      }
+      setContactsLoading(false);
     };
 
     const unsubscribe = onSnapshot(collection(db, "messages"), () => {
+      setContactsLoading(true);
       fetchContacts();
     });
 
@@ -454,18 +460,37 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="px-2 w-full h-full flex flex-col overflow-y-auto relative">
-        {listOfContacts.map((contact, mapID) => (
-          <Contacts
-            key={mapID}
-            contactId={contact.contactId}
-            userId={contact.userId}
-            imgSrc={contact.imgSrc}
-            name={contact.name}
-            latestMessage={contact.latestMessage}
-            timestamp={contact.timestamp}
-            selected={!!id && id == contact.contactId}
-          />
-        ))}
+        {listOfContacts.length === 0 && contactsLoading ? (
+          <LoadingContacts />
+        ) : (
+          listOfContacts.map((contact, mapID) => (
+            <Contacts
+              key={mapID}
+              contactId={contact.contactId}
+              userId={contact.userId}
+              imgSrc={contact.imgSrc}
+              name={contact.name}
+              latestMessage={contact.latestMessage}
+              timestamp={contact.timestamp}
+              selected={!!id && id == contact.contactId}
+            />
+          ))
+        )}
+        {listOfContacts.length === 0 && !contactsLoading && (
+          <div className="w-full h-full flex flex-col justify-center items-center">
+            <Image
+              src={"/img/select-message.svg"}
+              alt="No Conversations"
+              width={200}
+              height={200}
+            />
+            <span className="text-center font-bold">
+              No conversations yet.
+              <br />
+              Start a new chat!
+            </span>
+          </div>
+        )}
       </div>
       <div className="absolute right-4 bottom-4 w-fit h-fit">
         <Dialog>
@@ -501,34 +526,19 @@ export default function Sidebar() {
                 <input
                   id="nameEmail"
                   type="text"
-                  onKeyUp={(e) => {
-                    setUserSearchMatched(false);
-                    setOpenUserSearch(e.currentTarget.value.length > 0);
-                    handleUserSearch(e.currentTarget.value);
-                    setCreateConvoForm({
-                      ...createConvoForm,
-                      name: e.currentTarget.value,
-                    });
-
-                    if (e.currentTarget.value.length === 0) {
-                      setCreateConvoForm({
-                        ...createConvoForm,
-                        recipientId: "",
-                      });
-                    }
-                  }}
                   onChange={(e) => {
                     setUserSearchMatched(false);
-                    setOpenUserSearch(e.currentTarget.value.length > 0);
-                    handleUserSearch(e.currentTarget.value);
+                    setOpenUserSearch(e.target.value.length > 0);
+                    handleUserSearch(e.target.value);
                     setCreateConvoForm({
                       ...createConvoForm,
-                      name: e.currentTarget.value,
+                      name: e.target.value,
                     });
 
-                    if (e.currentTarget.value.length === 0) {
+                    if (e.target.value.length === 0) {
                       setCreateConvoForm({
                         ...createConvoForm,
+                        name: e.target.value,
                         recipientId: "",
                       });
                     }

@@ -6,6 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
+import { Skeleton } from "./ui/skeleton";
 
 export default function Navbar({
   withSelectedConvo,
@@ -24,17 +25,26 @@ export default function Navbar({
     >
       {withSelectedConvo && (
         <div className="w-fit h-fit flex items-center gap-3">
-          <Image
-            className="rounded-full"
-            src={imgUrl !== undefined ? imgUrl : "/img/profile-pic1.png"}
-            alt="profile pic"
-            width={44}
-            height={44}
-            priority
-          />
+          {imgUrl !== undefined ? (
+            <Image
+              className="rounded-full"
+              src={imgUrl}
+              alt="profile pic"
+              width={44}
+              height={44}
+              priority
+            />
+          ) : (
+            <Skeleton className="w-11 h-11 rounded-full" />
+          )}
 
           <div className="w-fit h-fit flex flex-col">
-            <h6 className="font-sans font-medium text-xl">{contactName}</h6>
+            {imgUrl !== undefined ? (
+              <h6 className="font-sans font-medium text-xl">{contactName}</h6>
+            ) : (
+              <Skeleton className="w-36 h-4 rounded-md" />
+            )}
+
             {/* <p className="font-sans font-semibold text-xs text-[#008000]">
               Online
             </p> */}

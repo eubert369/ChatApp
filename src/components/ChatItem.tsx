@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { chatItemTypes } from "./Types";
+import { Skeleton } from "./ui/skeleton";
 
 export default function ChatItem({
   message,
@@ -9,7 +10,7 @@ export default function ChatItem({
 }: chatItemTypes) {
   return (
     <div className={`w-full h-fit flex gap-1 ${!received && "justify-end"}`}>
-      {received && (
+      {received && profilePicUrl !== undefined ? (
         <Image
           className="rounded-full min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px]"
           src={profilePicUrl}
@@ -17,6 +18,8 @@ export default function ChatItem({
           width={28}
           height={28}
         />
+      ) : (
+        <Skeleton className="w-[28px] h-[28px] rounded-full" />
       )}
 
       <div
