@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Send } from "lucide-react";
 import ChatItem from "@/components/ChatItem";
 import Navbar from "@/components/Navbar";
@@ -20,6 +20,7 @@ export default function ChatMate() {
   const [chats, setChats] = useState<chatItemTypes[]>([]);
   const [message, setMessage] = useState<string>("");
   const [contactInfo, setContactInfo] = useState<contactInfoTypes>();
+  const inputTextArea = useRef<HTMLTextAreaElement>(null);
 
   if (!context) {
     throw new Error("ChildComponent must be used within a ContextProvider");
@@ -133,6 +134,9 @@ export default function ChatMate() {
       const response = await request.json();
 
       console.log("send message response", response);
+      if (inputTextArea.current) {
+        inputTextArea.current.value = "";
+      }
       setMessage("");
     } catch (error) {
       console.error(error);
@@ -167,14 +171,15 @@ export default function ChatMate() {
       >
         <textarea
           id="#"
-          rows={textareaFocused ? 2 : 1}
-          value={message}
+          ref={inputTextArea}
+          rows={textareaFocused && message.length > 40 ? 2 : 1}
           onFocus={() => setTextareaFocused(true)}
           onBlur={() => setTextareaFocused(false)}
           onKeyUp={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
               sendMessage();
+              e.currentTarget.value = "";
             }
             setMessage(e.currentTarget.value);
           }}
