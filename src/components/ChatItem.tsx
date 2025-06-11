@@ -10,7 +10,7 @@ export default function ChatItem({
 }: chatItemTypes) {
   return (
     <div className={`w-full h-fit flex gap-1 ${!received && "justify-end"}`}>
-      {received && profilePicUrl !== undefined ? (
+      {received && profilePicUrl !== undefined && (
         <Image
           className="rounded-full min-w-[28px] min-h-[28px] max-w-[28px] max-h-[28px]"
           src={profilePicUrl}
@@ -18,7 +18,9 @@ export default function ChatItem({
           width={28}
           height={28}
         />
-      ) : (
+      )}
+
+      {received && profilePicUrl == undefined && (
         <Skeleton className="w-[28px] h-[28px] rounded-full" />
       )}
 
