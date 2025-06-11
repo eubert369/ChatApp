@@ -48,10 +48,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="bg-[#183B4E] w-full h-screen flex justify-center items-center">
+    <div className="bg-[#183B4E] px-3 w-full h-screen overflow-y-auto flex justify-center items-center sm:px-0">
       <form
         onSubmit={formSubmit}
-        className="bg-[#F5EEDC] w-1/3 h-fit px-6 py-5 rounded-[12px] flex flex-col gap-5"
+        className="bg-[#F5EEDC] w-full h-fit px-6 py-2 rounded-[12px] flex flex-col gap-8 sm:w-1/3 "
       >
         <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
           Signup

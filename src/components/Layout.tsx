@@ -12,13 +12,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   if (!isLayoutExcluded) {
     return (
-      <div className="bg-[#F5EEDC] w-full h-screen p-3 flex gap-6">
-        <Sidebar />
-        <main className="w-full h-full flex flex-col gap-2">
-          {children}
-        </main>
+      <>
+        <div className={`bg-[#F5EEDC] p-0 w-full h-screen flex gap-6 sm:p-3`}>
+          <Sidebar />
+          <main
+            className={`${
+              router.pathname != "/chats" ? "flex" : "hidden"
+            } sm:flex w-full h-full flex-col gap-2`}
+          >
+            {children}
+          </main>
+        </div>
         <Toaster richColors theme="light" position="top-right" />
-      </div>
+      </>
     );
   } else {
     return (
