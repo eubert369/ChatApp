@@ -25,7 +25,6 @@ export default function ChatMate() {
     throw new Error("ChildComponent must be used within a ContextProvider");
   }
 
-
   useEffect(() => {
     const validateUser = async () => {
       try {
@@ -154,7 +153,7 @@ export default function ChatMate() {
             key={chatId}
             message={chat.message}
             received={chat.received}
-            profilePicUrl={contactInfo?.imgUrl !== undefined ? contactInfo?.imgUrl : "/img/profile-pic1.png"}
+            profilePicUrl={contactInfo?.imgUrl}
           />
         ))}
       </div>
