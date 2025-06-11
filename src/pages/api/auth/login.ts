@@ -18,7 +18,9 @@ export default async function handler(
       }));
 
       const isLoggedIn = requestedData.find(
-        (data) => data.username === username && data.password === password
+        (data) =>
+          data.username === username &&
+          atob(atob(atob(data.password))) === password
       );
 
       if (isLoggedIn) {

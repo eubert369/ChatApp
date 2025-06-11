@@ -39,7 +39,7 @@ export default function Login() {
 
         router.push("/chats");
       } else {
-        toast.error("Invcorrect username or password", { id: loadingID });
+        toast.error("Incorrect username or password", { id: loadingID });
       }
     } catch (error) {
       console.error(error);

@@ -384,7 +384,7 @@ export default function Sidebar() {
                           onChange={(e) => setEmail(e.target.value)}
                         />
                       </div>
-                      <div className="w-full h-fit flex items-center gap-4">
+                      {/* <div className="w-full h-fit flex items-center gap-4">
                         <div className="w-full h-fit flex flex-col gap-1">
                           <label
                             htmlFor="username"
@@ -417,7 +417,7 @@ export default function Sidebar() {
                             onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="w-full h-fit flex items-center justify-end gap-3">
