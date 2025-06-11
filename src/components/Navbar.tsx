@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import { EllipsisVertical, UserMinus } from "lucide-react";
+import Link from "next/link";
+import { EllipsisVertical, UserMinus, ArrowLeft } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -19,38 +20,43 @@ export default function Navbar({
 }) {
   return (
     <div
-      className={`bg-[#183B4E] w-full h-fit p-4 rounded-2xl flex items-center ${
+      className={`bg-[#183B4E] w-full h-fit px-2 py-4 flex items-center sm:px-4 sm:rounded-2xl ${
         withSelectedConvo ? "justify-between" : "justify-end"
       }`}
     >
-      {withSelectedConvo && (
-        <div className="w-fit h-fit flex items-center gap-3">
-          {imgUrl !== undefined ? (
-            <Image
-              className="rounded-full"
-              src={imgUrl}
-              alt="profile pic"
-              width={44}
-              height={44}
-              priority
-            />
-          ) : (
-            <Skeleton className="w-11 h-11 rounded-full" />
-          )}
-
-          <div className="w-fit h-fit flex flex-col">
+      <div className="w-fit h-fit flex items-center">
+        <Link href="/chats" className="sm:hidden">
+          <ArrowLeft className="text-white w-12 h-1w-12" />
+        </Link>
+        {withSelectedConvo && (
+          <div className="w-fit h-fit flex items-center gap-3">
             {imgUrl !== undefined ? (
-              <h6 className="font-sans font-medium text-xl">{contactName}</h6>
+              <Image
+                className="rounded-full"
+                src={imgUrl}
+                alt="profile pic"
+                width={44}
+                height={44}
+                priority
+              />
             ) : (
-              <Skeleton className="w-36 h-4 rounded-md" />
+              <Skeleton className="w-11 h-11 rounded-full" />
             )}
 
-            {/* <p className="font-sans font-semibold text-xs text-[#008000]">
+            <div className="w-fit h-fit flex flex-col">
+              {imgUrl !== undefined ? (
+                <h6 className="font-sans font-medium text-xl">{contactName}</h6>
+              ) : (
+                <Skeleton className="w-126 h-4 rounded-md" />
+              )}
+
+              {/* <p className="font-sans font-semibold text-xs text-[#008000]">
               Online
             </p> */}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <Popover>
         <PopoverTrigger className="cursor-pointer">

@@ -266,7 +266,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="bg-[#183B4E] w-fit min-w-[350px] max-w-[420px] h-full rounded-2xl flex flex-col relative">
+    <div className={`${router.pathname !== '/chats' ? 'hidden' : 'flex'} bg-[#183B4E] w-screen min-w-[350px] h-full flex-col relative sm:flex sm:w-fit sm:rounded-2xl sm:max-w-[420px]`}>
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
         <div className="w-full h-fit flex justify-between items-center">
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
@@ -454,7 +454,7 @@ export default function Sidebar() {
           <input
             type="text"
             id="#"
-            className="text-base text-[#183B4E] focus:outline-none"
+            className="text-base text-[#183B4E] w-full focus:outline-none"
             placeholder="Search..."
           />
         </div>
@@ -476,6 +476,7 @@ export default function Sidebar() {
             />
           ))
         )}
+        
         {listOfContacts.length === 0 && !contactsLoading && (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <Image
