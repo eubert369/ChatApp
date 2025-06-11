@@ -31,12 +31,12 @@ export default async function handler(
 
       if (!emailExists && !usernameExists) {
         docRef = await addDoc(collection(db, "users"), {
-          type: 'username/password',
+          type: "username/password",
           firstName: firstName,
           lastName: lastName,
           email: email,
           username: username,
-          password: password,
+          password: btoa(btoa(btoa(password))),
           imgUrl: "",
         });
 
