@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import GoogleAuthBtn from "@/components/GoogleAuthBtn";
 import { Context } from "@/components/ContextProvider";
 import { toast } from "sonner";
+import Head from "next/head";
 
 export default function Login() {
   const context = useContext(Context);
@@ -47,73 +48,78 @@ export default function Login() {
   };
 
   return (
-    <div className="bg-[#183B4E] px-3 w-full h-screen overflow-y-auto flex justify-center items-center sm:px-0">
-      <form
-        onSubmit={formSubmit}
-        className="bg-[#F5EEDC] w-full h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8 sm:w-1/3"
-      >
-        <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
-          Login
-        </h3>
-
-        <div className="w-full h-fit flex flex-col gap-2">
-          <div className="w-full h-fit flex flex-col gap-1">
-            <label
-              htmlFor="username"
-              className="font-sans font-normal text-base text-[#183B4E]"
-            >
-              Username
-            </label>
-            <input
-              required
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
-            />
-          </div>
-
-          <div className="w-full h-fit flex flex-col gap-1">
-            <label
-              htmlFor="password"
-              className="font-sans font-normal text-base text-[#183B4E]"
-            >
-              Password
-            </label>
-            <input
-              required
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
-            />
-          </div>
-        </div>
-
-        <div className="w-full h-fit flex flex-col gap-3">
-          {invalidCredentials && (
-            <p className="text-base text-red-500 text-center">
-              Incorrect Username or Password
-            </p>
-          )}
-          <button
-            type="submit"
-            className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:scale-105 cursor-pointer"
-          >
+    <>
+      <Head>
+        <title>Login</title>
+      </Head>
+      <div className="bg-[#183B4E] px-3 w-full h-screen overflow-y-auto flex justify-center items-center sm:px-0">
+        <form
+          onSubmit={formSubmit}
+          className="bg-[#F5EEDC] w-full h-fit px-6 py-5 rounded-[12px] flex flex-col gap-8 sm:w-1/3"
+        >
+          <h3 className="font-sans font-bold text-[32px] text-[#183B4E] text-center">
             Login
-          </button>
-          <GoogleAuthBtn />
+          </h3>
 
-          <p className="font-sans font-normal text-xs text-[#183B4E] text-center">
-            Don&apos;t have an Account?{" "}
-            <Link href={"/auth/signup"} className="hover:font-bold">
-              Signup
-            </Link>
-          </p>
-        </div>
-      </form>
-    </div>
+          <div className="w-full h-fit flex flex-col gap-2">
+            <div className="w-full h-fit flex flex-col gap-1">
+              <label
+                htmlFor="username"
+                className="font-sans font-normal text-base text-[#183B4E]"
+              >
+                Username
+              </label>
+              <input
+                required
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
+              />
+            </div>
+
+            <div className="w-full h-fit flex flex-col gap-1">
+              <label
+                htmlFor="password"
+                className="font-sans font-normal text-base text-[#183B4E]"
+              >
+                Password
+              </label>
+              <input
+                required
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-[#F5EEDC] focus:outline-none border border-[#183B4E] rounded-[8px] px-3 py-2 text-base text-[#183B4E]"
+              />
+            </div>
+          </div>
+
+          <div className="w-full h-fit flex flex-col gap-3">
+            {invalidCredentials && (
+              <p className="text-base text-red-500 text-center">
+                Incorrect Username or Password
+              </p>
+            )}
+            <button
+              type="submit"
+              className="w-full h-fit py-2 rounded-[8px] bg-[#27548A] border border-[#27548A] font-sans font-bold text-base text-white hover:scale-105 cursor-pointer"
+            >
+              Login
+            </button>
+            <GoogleAuthBtn />
+
+            <p className="font-sans font-normal text-xs text-[#183B4E] text-center">
+              Don&apos;t have an Account?{" "}
+              <Link href={"/auth/signup"} className="hover:font-bold">
+                Signup
+              </Link>
+            </p>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }

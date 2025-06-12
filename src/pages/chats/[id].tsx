@@ -11,6 +11,7 @@ import {
 } from "@/components/Types";
 import { db } from "@/components/firebase/Config";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
+import Head from "next/head";
 
 export default function ChatMate() {
   const router = useRouter();
@@ -145,6 +146,9 @@ export default function ChatMate() {
 
   return (
     <>
+      <Head>
+        <title>{contactInfo?.name}</title>
+      </Head>
       <Navbar
         withSelectedConvo={true}
         contactName={contactInfo?.name}
