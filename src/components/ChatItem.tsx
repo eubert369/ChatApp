@@ -24,13 +24,17 @@ export default function ChatItem({
         <Skeleton className="w-[28px] h-[28px] rounded-full" />
       )}
 
-      <div
-        className={`${
-          received ? "bg-[#27548A]" : "bg-[#DDA853]"
-        } w-fit max-w-2/3 h-fit p-2 font-sans font-normal text-base text-white rounded-[8px]`}
-      >
-        {message}
-      </div>
+      {profilePicUrl !== undefined ? (
+        <div
+          className={`${
+            received ? "bg-[#27548A]" : "bg-[#DDA853]"
+          } w-fit max-w-2/3 h-fit p-2 font-sans font-normal text-base text-white rounded-[8px]`}
+        >
+          {message}
+        </div>
+      ) : (
+        <Skeleton className="w-1/3 h-6" />
+      )}
     </div>
   );
 }
