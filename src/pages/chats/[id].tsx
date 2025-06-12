@@ -155,7 +155,7 @@ export default function ChatMate() {
         contactId={`${id}`}
       />
 
-      <div className="w-full h-full overflow-y-auto flex flex-col-reverse gap-3">
+      <div className="w-full h-full px-4 overflow-y-auto flex flex-col-reverse gap-3 sm:px-0">
         {chats.map((chat, chatId) => (
           <ChatItem
             key={chatId}
@@ -171,7 +171,7 @@ export default function ChatMate() {
           e.preventDefault();
           sendMessage();
         }}
-        className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
+        className="w-full h-fit flex gap-2 px-4 py-3 sm:rounded-2xl border border-[#183B4E]"
       >
         <textarea
           id="#"
