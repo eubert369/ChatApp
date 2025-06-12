@@ -71,7 +71,6 @@ export default function ChatMate() {
       try {
         const req = await fetch(`/api/users/contact/${id}`);
         const res = (await req.json()) as contactInfoTypes;
-        console.log("contact:", res);
 
         setContactInfo(res);
       } catch (error) {
@@ -153,6 +152,7 @@ export default function ChatMate() {
         withSelectedConvo={true}
         contactName={contactInfo?.name}
         imgUrl={contactInfo?.imgUrl}
+        contactId={`${id}`}
       />
 
       <div className="w-full h-full overflow-y-auto flex flex-col-reverse gap-3">
