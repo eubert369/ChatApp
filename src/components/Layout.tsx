@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import Sidebar from "./Sidebar";
 import { Toaster } from "./ui/sonner";
+import Head from "next/head";
 
 const layoutExlusionRoutes: string[] = ["/", "/auth/login", "/auth/signup"];
 
@@ -13,6 +14,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   if (!isLayoutExcluded) {
     return (
       <>
+        <Head>
+          <link rel="icon" href="/icons/letschat-logo.svg" />
+        </Head>
         <div className={`bg-[#F5EEDC] p-0 w-full h-screen flex gap-6 sm:p-3`}>
           <Sidebar />
           <main

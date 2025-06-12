@@ -11,6 +11,7 @@ import {
 } from "@/components/Types";
 import { db } from "@/components/firebase/Config";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
+import Head from "next/head";
 
 export default function ChatMate() {
   const router = useRouter();
@@ -70,7 +71,6 @@ export default function ChatMate() {
       try {
         const req = await fetch(`/api/users/contact/${id}`);
         const res = (await req.json()) as contactInfoTypes;
-        console.log("contact:", res);
 
         setContactInfo(res);
       } catch (error) {
@@ -145,13 +145,17 @@ export default function ChatMate() {
 
   return (
     <>
+      <Head>
+        <title>{contactInfo?.name}</title>
+      </Head>
       <Navbar
         withSelectedConvo={true}
         contactName={contactInfo?.name}
         imgUrl={contactInfo?.imgUrl}
+        contactId={`${id}`}
       />
 
-      <div className="w-full h-full overflow-y-auto flex flex-col-reverse gap-3">
+      <div className="w-full h-full px-4 overflow-y-auto flex flex-col-reverse gap-3 sm:px-0">
         {chats.map((chat, chatId) => (
           <ChatItem
             key={chatId}
@@ -167,7 +171,7 @@ export default function ChatMate() {
           e.preventDefault();
           sendMessage();
         }}
-        className="w-full h-fit flex gap-2 px-4 py-3 rounded-2xl border border-[#183B4E]"
+        className="w-full h-fit flex gap-2 px-4 py-3 sm:rounded-2xl border border-[#183B4E]"
       >
         <textarea
           id="#"

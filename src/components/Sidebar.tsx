@@ -266,7 +266,11 @@ export default function Sidebar() {
   };
 
   return (
-    <div className={`${router.pathname !== '/chats' ? 'hidden' : 'flex'} bg-[#183B4E] w-screen min-w-[350px] h-full flex-col relative sm:flex sm:w-fit sm:rounded-2xl sm:max-w-[420px]`}>
+    <div
+      className={`${
+        router.pathname !== "/chats" ? "hidden" : "flex"
+      } bg-[#183B4E] w-screen min-w-[350px] h-full flex-col relative sm:flex sm:w-fit sm:rounded-2xl sm:max-w-[420px]`}
+    >
       <div className="w-full h-fit px-4 py-5 flex flex-col gap-4">
         <div className="w-full h-fit flex justify-between items-center">
           <h4 className="font-sans font-semibold text-white text-2xl">Chats</h4>
@@ -476,7 +480,7 @@ export default function Sidebar() {
             />
           ))
         )}
-        
+
         {listOfContacts.length === 0 && !contactsLoading && (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <Image
@@ -500,9 +504,9 @@ export default function Sidebar() {
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className="bg-white rounded-full p-3 cursor-pointer shadow-lg hover:scale-110"
+                  className="bg-white rounded-full p-5 cursor-pointer shadow-lg hover:scale-110 sm:p-3"
                 >
-                  <SquarePen className="text-[#183B4E] w-4 h-4" />
+                  <SquarePen className="text-[#183B4E] w-6 h-6 sm:w-4 sm:h-4" />
                 </button>
               </DialogTrigger>
             </TooltipTrigger>

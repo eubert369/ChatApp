@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Context } from "@/components/ContextProvider";
 import { useRouter } from "next/router";
-import Navbar from "@/components/Navbar";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import Head from "next/head";
 
 export default function Chats() {
   const router = useRouter();
@@ -113,7 +113,9 @@ export default function Chats() {
 
   return (
     <>
-    <Navbar />
+      <Head>
+        <title>Chats</title>
+      </Head>
       <div className="w-full h-full flex items-center justify-center flex-col gap-3">
         <div className="relative w-2/3 h-2/3">
           <Image
