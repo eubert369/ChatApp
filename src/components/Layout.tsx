@@ -33,6 +33,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   } else {
     return (
       <>
+        <Head>
+          <link rel="icon" href="/icons/letschat-logo.svg" />
+        </Head>
         <main>{children}</main>
         <Toaster richColors theme="light" position="top-right" />
       </>
